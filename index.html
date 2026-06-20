@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrightMinds Learning</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+:root{--sky:#4A90D9;--sun:#F5A623;--mint:#3DBFA0;--coral:#F26B6B;--lav:#9B6FD4;--bg:#F7F9FF;--white:#fff;--text:#2C3E50;--muted:#7F8C8D;--border:#E0E8F5;--ok:#27AE60;--bad:#E74C3C;--hint:#F39C12;--sh:0 4px 20px rgba(74,144,217,0.12);--r:16px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.screen{display:none;min-height:100vh;}.screen.active{display:flex;flex-direction:column;}
+/* LOGIN */
+#loginScreen{background:linear-gradient(135deg,#EEF4FF,#F0FBF8);align-items:center;justify-content:center;padding:32px;}
+.lcard{background:#fff;border-radius:24px;padding:48px 40px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(74,144,217,0.15);text-align:center;}
+.lcard h1{font-family:'Fredoka One',cursive;font-size:36px;color:var(--sky);margin:12px 0 6px;}
+.lcard .sub{color:var(--muted);margin-bottom:32px;font-size:15px;}
+.lcard input{width:100%;padding:16px 20px;border:2px solid var(--border);border-radius:12px;font-size:22px;font-family:'Nunito',sans-serif;text-align:center;letter-spacing:6px;font-weight:800;outline:none;transition:border-color .2s;margin-bottom:16px;}
+.lcard input:focus{border-color:var(--sky);}
+.btn-p{width:100%;padding:16px;background:var(--sky);color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(74,144,217,.35);}
+.lerr{color:var(--bad);font-size:14px;margin-top:12px;font-weight:700;display:none;}
+.alink{margin-top:24px;font-size:12px;color:var(--muted);font-weight:700;cursor:pointer;text-decoration:none;display:block;}
+/* GRADE */
+#gradeScreen{background:linear-gradient(135deg,#EEF4FF,#FFF8EE);align-items:center;justify-content:center;padding:32px;}
+/* SUBJECT */
+#subjectScreen{background:linear-gradient(135deg,#F0FBF8,#EEF4FF);align-items:center;justify-content:center;padding:32px;}
+/* TOPIC */
+#topicScreen{background:linear-gradient(135deg,#FFF8EE,#EEF4FF);align-items:center;justify-content:center;padding:32px;}
+.cw{max-width:900px;width:100%;text-align:center;}
+.cw h2{font-family:'Fredoka One',cursive;font-size:34px;color:var(--text);margin-bottom:8px;}
+.cw .sub{color:var(--muted);margin-bottom:32px;font-size:15px;}
+.crow{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;}
+.gcard,.scard{background:#fff;border-radius:20px;padding:36px 48px;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:var(--sh);border:3px solid transparent;min-width:180px;text-align:center;}
+.gcard:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(74,144,217,.2);border-color:var(--sky);}
+.scard.math:hover{transform:translateY(-6px);border-color:var(--mint);}
+.scard.eng:hover{transform:translateY(-6px);border-color:var(--lav);}
+.gcard .ic,.scard .ic{font-size:56px;margin-bottom:12px;}
+.gcard h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--sky);}
+.scard.math h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--mint);}
+.scard.eng h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--lav);}
+.gcard p,.scard p{font-size:13px;color:var(--muted);margin-top:4px;font-weight:600;}
+.bbtn{background:none;border:2px solid var(--border);border-radius:10px;padding:10px 20px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:24px;transition:border-color .2s,color .2s;}
+.bbtn:hover{border-color:var(--sky);color:var(--sky);}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-top:16px;}
+.tcard{background:#fff;border-radius:14px;padding:22px 18px;cursor:pointer;transition:transform .2s,border-color .2s;box-shadow:var(--sh);border:3px solid transparent;text-align:center;}
+.tcard:hover{transform:translateY(-4px);border-color:var(--sun);}
+.tcard .tic{font-size:34px;margin-bottom:8px;}
+.tcard h4{font-family:'Fredoka One',cursive;font-size:16px;color:var(--text);}
+.tcard p{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;}
+/* EXAMPLES */
+#examplesScreen{background:var(--bg);}
+.exbody{flex:1;padding:32px;max-width:860px;margin:0 auto;width:100%;}
+.exbody h2{font-family:'Fredoka One',cursive;font-size:28px;color:var(--text);margin-bottom:4px;}
+.exbody .sub{color:var(--muted);margin-bottom:24px;}
+.excard{background:#fff;border-radius:var(--r);padding:26px 30px;box-shadow:var(--sh);margin-bottom:14px;border-left:5px solid var(--sun);}
+.exnum{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sun);margin-bottom:6px;}
+.exq{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.exans{font-size:15px;font-weight:600;color:var(--ok);background:#E8F8EF;padding:9px 13px;border-radius:8px;}
+.exexp{font-size:13px;color:var(--muted);margin-top:8px;font-weight:600;}
+.btn-go{padding:16px 40px;background:var(--mint);color:#fff;border:none;border-radius:12px;font-size:18px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:8px;transition:transform .15s;}
+.btn-go:hover{transform:translateY(-2px);}
+/* QUIZ */
+#quizScreen{background:var(--bg);}
+.qhdr{background:#fff;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.07);flex-wrap:wrap;gap:12px;}
+.qmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;}
+.badge.grade{background:#EEF4FF;color:var(--sky);}
+.badge.math{background:#E8FAF5;color:var(--mint);}
+.badge.eng{background:#F0EAF8;color:var(--lav);}
+.badge.tp{background:#FFF3D6;color:#B8860B;}
+.pw{flex:1;max-width:280px;}
+.pl{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px;}
+.pb{height:10px;background:var(--border);border-radius:10px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,var(--sky),var(--mint));border-radius:10px;transition:width .4s;}
+.qbody{flex:1;padding:32px;max-width:860px;margin:0 auto;width:100%;}
+.qcard{background:#fff;border-radius:var(--r);padding:34px;box-shadow:var(--sh);margin-bottom:18px;}
+.qno{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;}
+.qtxt{font-size:20px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:4px;}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;}
+.opt{padding:15px 18px;border:2px solid var(--border);border-radius:12px;background:#fff;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:var(--text);cursor:pointer;text-align:left;transition:all .2s;display:flex;align-items:center;gap:12px;}
+.opt:hover:not(:disabled){border-color:var(--sky);background:#EEF4FF;}
+.opt.sel{border-color:var(--sky);background:#EEF4FF;color:var(--sky);}
+.opt.correct{border-color:var(--ok);background:#E8F8EF;color:var(--ok);}
+.opt.wrong{border-color:var(--bad);background:#FEF0F0;color:var(--bad);}
+.opt:disabled{cursor:default;}
+.ol{width:27px;height:27px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.opt.sel .ol{background:var(--sky);color:#fff;}
+.opt.correct .ol{background:var(--ok);color:#fff;}
+.opt.wrong .ol{background:var(--bad);color:#fff;}
+.sain{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:12px;font-size:20px;font-family:'Nunito',sans-serif;font-weight:700;outline:none;transition:border-color .2s;margin-top:16px;}
+.sain:focus{border-color:var(--sky);}
+.sain.correct{border-color:var(--ok);background:#E8F8EF;}
+.sain.wrong{border-color:var(--bad);background:#FEF0F0;}
+.qfb{margin-top:12px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:700;display:none;}
+.qfb.correct{background:#E8F8EF;color:var(--ok);display:block;}
+.qfb.wrong{background:#FEF0F0;color:var(--bad);display:block;}
+.harea{margin-top:12px;}
+.htog{background:none;border:2px solid var(--hint);color:var(--hint);padding:7px 14px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;}
+.htog:hover{background:var(--hint);color:#fff;}
+.hbox{display:none;margin-top:9px;padding:11px 15px;background:#FFF8E8;border:2px solid #F5D78E;border-radius:10px;font-size:14px;color:#8B6914;font-weight:600;line-height:1.5;}
+.hbox.show{display:block;}
+.qnav{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.bcheck{padding:14px 30px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:var(--mint);color:#fff;}
+.bnext{padding:14px 30px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:var(--sky);color:#fff;}
+.bfin{padding:14px 30px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:var(--coral);color:#fff;}
+/* RESULTS */
+#resultsScreen{background:linear-gradient(135deg,#EEF4FF,#F0FBF8);align-items:center;justify-content:center;padding:32px;}
+.rcard{background:#fff;border-radius:24px;padding:48px 40px;max-width:680px;width:100%;box-shadow:0 8px 40px rgba(74,144,217,.15);text-align:center;}
+.scirc{width:150px;height:150px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 22px;border:8px solid var(--sky);}
+.scirc.high{border-color:var(--ok);}.scirc.mid{border-color:var(--sun);}.scirc.low{border-color:var(--bad);}
+.snum{font-family:'Fredoka One',cursive;font-size:46px;color:var(--sky);line-height:1;}
+.scirc.high .snum{color:var(--ok);}.scirc.mid .snum{color:var(--sun);}.scirc.low .snum{color:var(--bad);}
+.slbl{font-size:12px;font-weight:700;color:var(--muted);}
+.rcard h2{font-family:'Fredoka One',cursive;font-size:28px;color:var(--text);margin-bottom:6px;}
+.rcard .tag{color:var(--muted);font-size:15px;margin-bottom:22px;}
+.bdown{text-align:left;margin-bottom:22px;max-height:320px;overflow-y:auto;}
+.bdi{display:flex;align-items:flex-start;justify-content:space-between;padding:9px 13px;border-radius:10px;margin-bottom:6px;gap:10px;}
+.bdi.c{background:#E8F8EF;}.bdi.w{background:#FEF0F0;}
+.bdq{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.bdb{padding:3px 9px;border-radius:20px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}
+.bdi.c .bdb{background:var(--ok);color:#fff;}.bdi.w .bdb{background:var(--bad);color:#fff;}
+.rbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.br{padding:13px 26px;border-radius:12px;background:var(--lav);color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+.bh{padding:13px 26px;border-radius:12px;background:var(--border);color:var(--text);border:none;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+/* ADMIN */
+#adminScreen{background:var(--bg);}
+.ahdr{background:#fff;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.logo{font-family:'Fredoka One',cursive;font-size:26px;color:var(--sky);}
+.logo span{color:var(--sun);}
+.abody{flex:1;padding:32px;max-width:1140px;margin:0 auto;width:100%;}
+.abody h2{font-family:'Fredoka One',cursive;font-size:28px;color:var(--text);margin-bottom:4px;}
+.abody .sub{color:var(--muted);margin-bottom:20px;}
+.srow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
+.sc{background:#fff;border-radius:12px;padding:18px 22px;box-shadow:var(--sh);flex:1;min-width:125px;}
+.sc .sv{font-family:'Fredoka One',cursive;font-size:30px;color:var(--sky);}
+.sc .sl{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+.frow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.fb{padding:8px 16px;border-radius:20px;border:2px solid var(--border);background:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;}
+.fb.on{background:var(--sky);border-color:var(--sky);color:#fff;}
+.atbl{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.atbl table{width:100%;border-collapse:collapse;}
+.atbl th{padding:12px 13px;text-align:left;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#F7F9FF;border-bottom:2px solid var(--border);}
+.atbl td{padding:12px 13px;font-size:14px;font-weight:600;border-bottom:1px solid var(--border);color:var(--text);}
+.atbl tr:last-child td{border-bottom:none;}
+.atbl tr:hover td{background:#F7F9FF;}
+.spi{display:inline-block;padding:4px 11px;border-radius:20px;font-size:13px;font-weight:800;}
+.spi.h{background:#E8F8EF;color:var(--ok);}.spi.m{background:#FFF3D6;color:#B8860B;}.spi.l{background:#FEF0F0;color:var(--bad);}
+.db{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:700;color:var(--sky);cursor:pointer;}
+.dr{display:none;}.dr.open{display:table-row;}
+.dr td{background:#F7F9FF;padding:13px 15px;}
+.das{display:flex;flex-wrap:wrap;gap:7px;}
+.da{padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;}
+.da.c{background:#E8F8EF;color:var(--ok);}.da.w{background:#FEF0F0;color:var(--bad);}
+.empty{text-align:center;padding:60px;color:var(--muted);font-weight:600;}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;}
+.ovc{background:#fff;border-radius:20px;padding:40px;max-width:380px;width:90%;box-shadow:0 16px 60px rgba(0,0,0,.2);text-align:center;}
+.ovc h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--text);margin-bottom:6px;}
+.ovc p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.ovc input{width:100%;padding:13px;border:2px solid var(--border);border-radius:10px;font-size:16px;font-family:'Nunito',sans-serif;font-weight:700;text-align:center;outline:none;margin-bottom:12px;}
+.ovc input:focus{border-color:var(--sky);}
+.bcx{background:none;border:2px solid var(--border);border-radius:10px;padding:10px 20px;width:100%;margin-top:6px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;}
+@media(max-width:600px){.opts,.crow{flex-direction:column;align-items:center;}.opts{grid-template-columns:1fr;}.tgrid{grid-template-columns:1fr 1fr;}.lcard{padding:32px 22px;}}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="loginScreen" class="screen active">
+  <div class="lcard">
+    <div style="font-size:68px">🎓</div>
+    <h1>BrightMinds</h1>
+    <p class="sub">Enter your student code to start learning!</p>
+    <input type="text" id="codeIn" placeholder="e.g. Eni1" maxlength="10" autocomplete="off">
+    <button class="btn-p" onclick="doLogin()">Let's Go! 🚀</button>
+    <div class="lerr" id="lerr">❌ Code not found. Ask your teacher!</div>
+    <a class="alink" onclick="showAL()">👩‍🏫 Teacher / Admin View</a>
+  </div>
+</div>
+<!-- GRADE -->
+<div id="gradeScreen" class="screen">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:32px;background:linear-gradient(135deg,#EEF4FF,#FFF8EE)">
+    <div class="cw">
+      <h2>Welcome, <span id="sname" style="color:var(--sky)"></span>! 👋</h2>
+      <p class="sub">Choose your grade to begin</p>
+      <div class="crow">
+        <div class="gcard" onclick="pickGrade(2)"><div class="ic">🌱</div><h3>Grade 2</h3><p>Maths &amp; English</p></div>
+        <div class="gcard" onclick="pickGrade(5)"><div class="ic">🚀</div><h3>Grade 5</h3><p>Maths &amp; English</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- SUBJECT -->
+<div id="subjectScreen" class="screen">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:32px;background:linear-gradient(135deg,#F0FBF8,#EEF4FF)">
+    <div class="cw">
+      <button class="bbtn" onclick="ss('gradeScreen')">← Back</button>
+      <h2>Grade <span id="gdis"></span> — Pick a Subject</h2>
+      <p class="sub">What would you like to study today?</p>
+      <div class="crow">
+        <div class="scard math" onclick="pickSub('math')"><div class="ic">🔢</div><h3>Mathematics</h3><p>Numbers, shapes &amp; more</p></div>
+        <div class="scard eng" onclick="pickSub('eng')"><div class="ic">📚</div><h3>English</h3><p>Reading &amp; language skills</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- TOPIC -->
+<div id="topicScreen" class="screen">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:32px;background:linear-gradient(135deg,#FFF8EE,#EEF4FF)">
+    <div class="cw">
+      <button class="bbtn" onclick="ss('subjectScreen')">← Back</button>
+      <h2 id="topicTitle">Choose a Topic</h2>
+      <p class="sub">Pick one topic to practise</p>
+      <div class="tgrid" id="tgrid"></div>
+    </div>
+  </div>
+</div>
+<!-- EXAMPLES -->
+<div id="examplesScreen" class="screen">
+  <div class="exbody">
+    <button class="bbtn" onclick="ss('topicScreen')" style="margin-bottom:16px">← Back</button>
+    <h2 id="extitle">📖 Study These Examples First</h2>
+    <p class="sub" id="exsub">Look carefully — your quiz will be similar!</p>
+    <div id="excont"></div>
+    <button class="btn-go" onclick="startQuiz()">I'm Ready — Start Quiz! 🎯</button>
+  </div>
+</div>
+<!-- QUIZ -->
+<div id="quizScreen" class="screen">
+  <div class="qhdr">
+    <div class="qmeta">
+      <span class="badge grade" id="qgb"></span>
+      <span class="badge" id="qsb"></span>
+      <span class="badge tp" id="qtb"></span>
+      <span style="font-size:13px;font-weight:700;color:var(--muted)" id="qstu"></span>
+    </div>
+    <div class="pw"><div class="pl" id="plbl"></div><div class="pb"><div class="pf" id="pfill" style="width:0%"></div></div></div>
+  </div>
+  <div class="qbody" id="qbody"></div>
+</div>
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="rcard">
+    <div class="scirc" id="scirc"><div class="snum" id="snum"></div><div class="slbl">SCORE</div></div>
+    <h2 id="rh"></h2><p class="tag" id="rt"></p>
+    <div class="bdown" id="bdown"></div>
+    <div class="rbtns">
+      <button class="br" onclick="redoQ()">🔄 Try Again</button>
+      <button class="br" style="background:var(--mint)" onclick="ss('topicScreen')">📂 New Topic</button>
+      <button class="bh" onclick="goHome()">🏠 Home</button>
+    </div>
+  </div>
+</div>
+<!-- ADMIN -->
+<div id="adminScreen" class="screen">
+  <div class="ahdr">
+    <div class="logo">Bright<span>Minds</span> <span style="font-size:14px;color:var(--muted);font-family:Nunito;font-weight:700">Admin</span></div>
+    <button class="bbtn" onclick="goHome()" style="margin:0">← Exit Admin</button>
+  </div>
+  <div class="abody">
+    <h2>📊 Student Submissions</h2>
+    <p class="sub">All quiz results, auto-marked in real time</p>
+    <div class="srow" id="astats"></div>
+    <div class="frow">
+      <button class="fb on" onclick="filt('all',this)">All</button>
+      <button class="fb" onclick="filt('Grade 2',this)">Grade 2</button>
+      <button class="fb" onclick="filt('Grade 5',this)">Grade 5</button>
+      <button class="fb" onclick="filt('math',this)">Maths</button>
+      <button class="fb" onclick="filt('eng',this)">English</button>
+    </div>
+    <div class="atbl" id="atbl"></div>
+  </div>
+</div>
+<!-- ADMIN OVERLAY -->
+<div class="ov" id="alov" style="display:none">
+  <div class="ovc">
+    <div style="font-size:48px;margin-bottom:10px">🔐</div>
+    <h3>Teacher Access</h3>
+    <p>Enter the admin password</p>
+    <input type="password" id="apw" placeholder="Admin password" onkeypress="if(event.key==='Enter')chkA()">
+    <button class="btn-p" onclick="chkA()" style="margin-bottom:0">Enter</button>
+    <div style="color:var(--bad);font-size:13px;font-weight:700;margin-top:10px;min-height:18px" id="aperr"></div>
+    <button class="bcx" onclick="document.getElementById('alov').style.display='none'">Cancel</button>
+  </div>
+</div>
+<script>
+// ── CODES ──────────────────────────────────────────────────────────────────
+const CODES={
+  "Eni1":{n:"Eniyi",g:2},"Eni2":{n:"Eniyi",g:5},
+  "Iye1":{n:"Iyebiye",g:2},"Iye2":{n:"Iyebiye",g:5},
+  "Ade1":{n:"Adebayo",g:2},"Ade2":{n:"Adebayo",g:5},
+  "Tolu1":{n:"Toluwani",g:2},"Tolu2":{n:"Toluwani",g:5},
+  "Femi1":{n:"Femi",g:2},"Femi2":{n:"Femi",g:5},
+  "Kemi1":{n:"Kemi",g:2},"Kemi2":{n:"Kemi",g:5},
+  "Seun1":{n:"Seun",g:2},"Seun2":{n:"Seun",g:5},
+  "Bisi1":{n:"Bisi",g:2},"Bisi2":{n:"Bisi",g:5},
+  "TEST":{n:"Tester",g:null}
+};
+const APW="teacher2024";
+
+// ── QUESTION BANK ──────────────────────────────────────────────────────────
+const QB={
+ 2:{
+  math:{
+   "Addition":{icon:"➕",desc:"Adding numbers",
+    ex:[
+     {q:"30 + 40 = ?",a:"70",e:"3 tens + 4 tens = 7 tens = 70"},
+     {q:"80 + 20 = ?",a:"100",e:"8 tens + 2 tens = 10 tens = 100"},
+     {q:"45 + 23 = ?",a:"68",e:"Ones: 5+3=8. Tens: 4+2=6. Answer: 68"}
+    ],
+    qs:[    
+     {t:"sa",q:"80 + 80 = ?",a:"160",h:"8+8=16, so 80+80=160"},
+     ,
+     {t:"sa",q:"80 + 60 = ?",a:"140",h:"8+6=14, so 80+60=140"},
+     ,
+     {t:"sa",q:"30 + 70 = ?",a:"100",h:"3+7=10, so 30+70=100"},
+     ,
+     {t:"sa",q:"70 + 60 = ?",a:"130",h:"7+6=13, so 70+60=130"},
+     ,
+     {t:"sa",q:"50 + 60 = ?",a:"110",h:"5+6=11, so 50+60=110"},
+     ,
+     {t:"sa",q:"40 + 50 = ?",a:"90",h:"4+5=9, so 40+50=90"},
+     ,
+     {t:"sa",q:"80 + 70 = ?",a:"150",h:"8+7=15, so 80+70=150"},
+     ,
+     {t:"sa",q:"20 + 80 = ?",a:"100",h:"2+8=10, so 20+80=100"},
+     ,
+     {t:"sa",q:"40 + 60 = ?",a:"100",h:"4+6=10, so 40+60=100"},
+     ,
+     {t:"sa",q:"20 + 50 = ?",a:"70",h:"2+5=7, so 20+50=70"},
+     ,
+     {t:"mc",q:"What is 45 + 23?",o:["62","68","70","65"],a:"68",h:"Ones 5+3=8. Tens 4+2=6. Answer 68."},
+     ,
+     {t:"mc",q:"What is 32 + 47?",o:["70","75","79","82"],a:"79",h:"Ones 2+7=9. Tens 3+4=7. Answer 79."},
+     ,
+     {t:"mc",q:"What is 61 + 28?",o:["80","85","89","91"],a:"89",h:"Ones 1+8=9. Tens 6+2=8. Answer 89."},
+     ,
+     {t:"mc",q:"Eniyi has 34 stickers. Iyebiye gives her 25 more. How many does Eniyi have?",o:["49","54","59","64"],a:"59",h:"34+25: Ones 4+5=9, Tens 3+2=5. Answer 59."},
+     ,
+     {t:"mc",q:"What is 27 + 63?",o:["80","85","90","95"],a:"90",h:"Ones 7+3=10 carry 1. Tens 2+6+1=9. Answer 90."},
+     ,
+     {t:"sa",q:"Adebayo has 44 oranges and picks 36 more. How many oranges in total?",a:"80",h:"44+36: Ones 4+6=10, carry 1. Tens 4+3+1=8. Answer 80."}
+    ]
+   },
+   "Subtraction":{icon:"➖",desc:"Taking away numbers",
+    ex:[
+     {q:"59 − 9 = ?",a:"50",e:"9−9=0. The tens digit stays the same: 50"},
+     {q:"36 − 4 = ?",a:"32",e:"Ones: 6−4=2. Tens stays 3. Answer: 32"},
+     {q:"68 − 5 = ?",a:"63",e:"Ones: 8−5=3. Tens stays 6. Answer: 63"}
+    ],
+    qs:[    
+     {t:"sa",q:"59 − 9 = ?",a:"50",h:"9−9=0, tens stays same."},
+     ,
+     {t:"sa",q:"15 − 2 = ?",a:"13",h:"5−2=3, tens stays 1. Answer: 13."},
+     ,
+     {t:"sa",q:"36 − 4 = ?",a:"32",h:"6−4=2, tens stays 3. Answer: 32."},
+     ,
+     {t:"sa",q:"68 − 8 = ?",a:"60",h:"8−8=0, tens digit stays: 60."},
+     ,
+     {t:"sa",q:"68 − 5 = ?",a:"63",h:"8−5=3, tens stays 6. Answer: 63."},
+     ,
+     {t:"sa",q:"95 − 4 = ?",a:"91",h:"5−4=1, tens stays 9. Answer: 91."},
+     ,
+     {t:"sa",q:"47 − 5 = ?",a:"42",h:"7−5=2, tens stays 4. Answer: 42."},
+     ,
+     {t:"sa",q:"64 − 4 = ?",a:"60",h:"4−4=0, tens stays 6. Answer: 60."},
+     ,
+     {t:"sa",q:"48 − 5 = ?",a:"43",h:"8−5=3, tens stays 4. Answer: 43."},
+     ,
+     {t:"sa",q:"19 − 5 = ?",a:"14",h:"9−5=4, tens stays 1. Answer: 14."},
+     ,
+     {t:"mc",q:"Iyebiye has 76 beads. She gives away 6. How many are left?",o:["60","68","70","74"],a:"70",h:"6−6=0, tens stays: 70."},
+     ,
+     {t:"mc",q:"What is 89 − 7?",o:["80","81","82","83"],a:"82",h:"9−7=2, tens stays 8. Answer: 82."},
+     ,
+     {t:"mc",q:"What is 55 − 5?",o:["45","50","55","60"],a:"50",h:"5−5=0, tens stays 5. Answer: 50."},
+     ,
+     {t:"mc",q:"Toluwani had 48 sweets and ate 6. How many remain?",o:["40","42","44","46"],a:"42",h:"8−6=2, tens stays 4. Answer: 42."},
+     ,
+     {t:"mc",q:"What is 97 − 3?",o:["90","93","94","96"],a:"94",h:"7−3=4, tens stays 9. Answer: 94."},
+     ,
+     {t:"sa",q:"66 − 6 = ?",a:"60",h:"6−6=0, tens stays 6. Answer: 60."}
+    ]
+   },
+   "Multiplication":{icon:"✖️",desc:"Times tables 2, 3 & 5",
+    ex:[
+     {q:"2 × 3 = ?",a:"6",e:"2 groups of 3: 3+3=6"},
+     {q:"9 × 2 = ?",a:"18",e:"Count by 2s nine times: 2,4,6,8,10,12,14,16,18"},
+     {q:"5 × 3 = ?",a:"15",e:"Count by 3s five times: 3,6,9,12,15"}
+    ],
+    qs:[    
+     {t:"sa",q:"2 × 3 = ?",a:"6",h:"2 groups of 3."},
+     ,
+     {t:"sa",q:"7 × 2 = ?",a:"14",h:"Count by 2s seven times."},
+     ,
+     {t:"sa",q:"9 × 2 = ?",a:"18",h:"Count by 2s: 2,4,6,8,10,12,14,16,18"},
+     ,
+     {t:"sa",q:"9 × 3 = ?",a:"27",h:"Count by 3s: 3,6,9,12,15,18,21,24,27"},
+     ,
+     {t:"sa",q:"7 × 3 = ?",a:"21",h:"Count by 3s: 3,6,9,12,15,18,21"},
+     ,
+     {t:"sa",q:"4 × 3 = ?",a:"12",h:"Count by 3s: 3,6,9,12"},
+     ,
+     {t:"sa",q:"5 × 3 = ?",a:"15",h:"Count by 3s: 3,6,9,12,15"},
+     ,
+     {t:"sa",q:"6 × 2 = ?",a:"12",h:"Count by 2s: 2,4,6,8,10,12"},
+     ,
+     {t:"sa",q:"8 × 3 = ?",a:"24",h:"Count by 3s: 3,6,9,12,15,18,21,24"},
+     ,
+     {t:"sa",q:"5 × 2 = ?",a:"10",h:"Count by 2s: 2,4,6,8,10"},
+     ,
+     {t:"mc",q:"Eniyi has 3 bags with 3 apples each. How many apples in total?",o:["6","9","12","15"],a:"9",h:"3 × 3 = 9."},
+     ,
+     {t:"mc",q:"Iyebiye puts stickers in 4 rows of 2. How many stickers?",o:["6","8","10","12"],a:"8",h:"4 × 2 = 8."},
+     ,
+     {t:"mc",q:"What is 10 × 2?",o:["12","15","18","20"],a:"20",h:"Count by 2s ten times."},
+     ,
+     {t:"sa",q:"4 × 5 = ?",a:"20",h:"Count by 5s: 5,10,15,20"},
+     ,
+     {t:"sa",q:"6 × 5 = ?",a:"30",h:"Count by 5s: 5,10,15,20,25,30"},
+     ,
+     {t:"sa",q:"3 × 5 = ?",a:"15",h:"Count by 5s: 5,10,15"}
+    ]
+   },
+   "Shapes":{icon:"🔷",desc:"2D shapes and their properties",
+    ex:[
+     {q:"How many sides does a triangle have?",a:"3",e:"Tri means three. A triangle has 3 sides and 3 corners."},
+     {q:"A shape with 4 equal sides is called a ___?",a:"Square",e:"All 4 sides are the same length in a square."},
+     {q:"Which shape has NO corners?",a:"Circle",e:"A circle is perfectly round — no straight sides or corners."}
+    ],
+    qs:[    
+     {t:"mc",q:"How many sides does a triangle have?",o:["2","3","4","5"],a:"3",h:"Tri = three."},
+     ,
+     {t:"mc",q:"How many sides does a square have?",o:["3","4","5","6"],a:"4",h:"A square has 4 equal sides."},
+     ,
+     {t:"mc",q:"How many sides does a rectangle have?",o:["3","4","5","6"],a:"4",h:"A rectangle has 4 sides (2 long, 2 short)."},
+     ,
+     {t:"mc",q:"Which shape has 4 equal sides and 4 right angles?",o:["Circle","Triangle","Rectangle","Square"],a:"Square",h:"All sides equal AND all angles 90° = square."},
+     ,
+     {t:"mc",q:"Which shape is perfectly round?",o:["Square","Triangle","Circle","Rectangle"],a:"Circle",h:"Round with no corners = circle."},
+     ,
+     {t:"mc",q:"A triangle has how many corners?",o:["2","3","4","5"],a:"3",h:"Same number of corners as sides."},
+     ,
+     {t:"mc",q:"Which shape has 2 long sides and 2 short sides?",o:["Circle","Square","Rectangle","Triangle"],a:"Rectangle",h:"Rectangle has opposite sides equal but not all the same."},
+     ,
+     {t:"mc",q:"How many corners does a square have?",o:["2","3","4","6"],a:"4",h:"4 sides = 4 corners."},
+     ,
+     {t:"mc",q:"Eniyi draws a shape with 3 sides. What is it?",o:["Square","Circle","Triangle","Rectangle"],a:"Triangle",h:"3 sides = triangle."},
+     ,
+     {t:"mc",q:"A door is most like which shape?",o:["Circle","Triangle","Square","Rectangle"],a:"Rectangle",h:"Doors are taller than wide — rectangle!"},
+     ,
+     {t:"mc",q:"A wheel is most like which shape?",o:["Square","Triangle","Circle","Rectangle"],a:"Circle",h:"Wheels are round like circles."},
+     ,
+     {t:"mc",q:"Which shape has NO straight sides?",o:["Triangle","Rectangle","Circle","Square"],a:"Circle",h:"Circles are curved all the way round."},
+     ,
+     {t:"mc",q:"A pizza slice looks most like a ___?",o:["Circle","Rectangle","Triangle","Square"],a:"Triangle",h:"Wide at one end and pointed at the tip."},
+     ,
+     {t:"mc",q:"Iyebiye draws a shape with all sides equal and 4 right angles. What is it?",o:["Rectangle","Triangle","Circle","Square"],a:"Square",h:"All 4 sides equal + 4 right angles = square."},
+     ,
+     {t:"mc",q:"Which shape has more sides — a triangle or a rectangle?",o:["Triangle","Rectangle","They are the same","Neither has sides"],a:"Rectangle",h:"Triangle=3 sides, Rectangle=4 sides. 4>3."},
+     ,
+     {t:"mc",q:"How many sides does a pentagon have?",o:["4","5","6","8"],a:"5",h:"Penta = five."}
+    ]
+   },
+   "Fractions":{icon:"½",desc:"Numerators and denominators",
+    ex:[
+     {q:"In 1/2, which number is the numerator?",a:"1",e:"The numerator is the TOP number — how many parts we have."},
+     {q:"In 3/4, which number is the denominator?",a:"4",e:"The denominator is the BOTTOM number — equal parts in total."},
+     {q:"A pizza cut into 4 equal slices. Eniyi eats 1. What fraction?",a:"1/4",e:"1 out of 4 equal parts = 1/4."}
+    ],
+    qs:[    
+     {t:"mc",q:"In the fraction 1/2, what is the numerator?",o:["1","2","3","4"],a:"1",h:"Numerator = top number."},
+     ,
+     {t:"mc",q:"In the fraction 1/2, what is the denominator?",o:["1","2","3","4"],a:"2",h:"Denominator = bottom number."},
+     ,
+     {t:"mc",q:"In the fraction 1/3, what is the numerator?",o:["1","2","3","4"],a:"1",h:"Numerator = top number."},
+     ,
+     {t:"mc",q:"In the fraction 1/3, what is the denominator?",o:["1","2","3","4"],a:"3",h:"Denominator = bottom number."},
+     ,
+     {t:"mc",q:"In the fraction 1/4, what is the denominator?",o:["1","2","4","8"],a:"4",h:"Denominator = bottom number."},
+     ,
+     {t:"mc",q:"In the fraction 2/5, what is the numerator?",o:["2","5","7","10"],a:"2",h:"Numerator = top number."},
+     ,
+     {t:"mc",q:"In the fraction 2/5, what is the denominator?",o:["2","3","5","10"],a:"5",h:"Denominator = bottom number."},
+     ,
+     {t:"mc",q:"In the fraction 5/6, what is the numerator?",o:["1","5","6","11"],a:"5",h:"Numerator = top number."},
+     ,
+     {t:"mc",q:"In the fraction 3/8, what is the numerator?",o:["3","5","8","11"],a:"3",h:"Numerator = top number."},
+     ,
+     {t:"mc",q:"In the fraction 3/8, what is the denominator?",o:["3","5","8","11"],a:"8",h:"Denominator = bottom number."},
+     ,
+     {t:"mc",q:"A pizza is cut into 4 equal slices. Eniyi eats 1. What fraction did she eat?",o:["1/2","1/3","1/4","1/5"],a:"1/4",h:"1 out of 4 equal parts = 1/4."},
+     ,
+     {t:"mc",q:"A cake is cut into 3 parts. Iyebiye eats 1. What fraction did she eat?",o:["1/2","1/3","1/4","1/6"],a:"1/3",h:"1 out of 3 equal parts = 1/3."},
+     ,
+     {t:"mc",q:"What fraction has numerator 3 and denominator 4?",o:["4/3","3/4","3/3","4/4"],a:"3/4",h:"Numerator (3) goes on top, denominator (4) on bottom."},
+     ,
+     {t:"mc",q:"Which fraction is bigger: 1/2 or 1/4?",o:["1/2","1/4","They are equal","Cannot tell"],a:"1/2",h:"Bigger denominator means smaller pieces."},
+     ,
+     {t:"mc",q:"Toluwani ate 2 out of 6 equal slices of bread. What fraction did he eat?",o:["2/4","2/6","6/2","2/8"],a:"2/6",h:"Parts eaten (2) over total parts (6) = 2/6."},
+     ,
+     {t:"mc",q:"What is the denominator in 7/10?",o:["3","7","10","17"],a:"10",h:"Denominator = bottom number."}
+    ]
+   },
+   "Place Value":{icon:"🔢",desc:"Hundreds, tens and ones",
+    ex:[
+     {q:"700 + 70 + 9 = ?",a:"779",e:"7 hundreds, 7 tens, 9 ones = 779"},
+     {q:"500 + 40 + 5 = ?",a:"545",e:"5 hundreds, 4 tens, 5 ones = 545"},
+     {q:"In 836: what is the hundreds digit?",a:"8",e:"836 = 800 + 30 + 6. The hundreds digit is 8."}
+    ],
+    qs:[    
+     {t:"sa",q:"700 + 70 + 9 = ?",a:"779",h:"7 hundreds, 7 tens, 9 ones."},
+     ,
+     {t:"sa",q:"200 + 90 + 8 = ?",a:"298",h:"2 hundreds, 9 tens, 8 ones."},
+     ,
+     {t:"sa",q:"500 + 40 + 5 = ?",a:"545",h:"5 hundreds, 4 tens, 5 ones."},
+     ,
+     {t:"sa",q:"600 + 50 + 7 = ?",a:"657",h:"6 hundreds, 5 tens, 7 ones."},
+     ,
+     {t:"sa",q:"300 + 80 + 7 = ?",a:"387",h:"3 hundreds, 8 tens, 7 ones."},
+     ,
+     {t:"sa",q:"700 + 10 + 6 = ?",a:"716",h:"7 hundreds, 1 ten, 6 ones."},
+     ,
+     {t:"sa",q:"100 + 20 + 2 = ?",a:"122",h:"1 hundred, 2 tens, 2 ones."},
+     ,
+     {t:"sa",q:"400 + 60 + 7 = ?",a:"467",h:"4 hundreds, 6 tens, 7 ones."},
+     ,
+     {t:"sa",q:"200 + 50 + 4 = ?",a:"254",h:"2 hundreds, 5 tens, 4 ones."},
+     ,
+     {t:"sa",q:"700 + 50 + 5 = ?",a:"755",h:"7 hundreds, 5 tens, 5 ones."},
+     ,
+     {t:"mc",q:"What is the hundreds digit in 436?",o:["3","4","6","34"],a:"4",h:"In 436: 4=hundreds, 3=tens, 6=ones."},
+     ,
+     {t:"mc",q:"What is the tens digit in 582?",o:["2","5","8","58"],a:"8",h:"In 582: 5=hundreds, 8=tens, 2=ones."},
+     ,
+     {t:"mc",q:"What is the ones digit in 917?",o:["1","7","9","91"],a:"7",h:"In 917: 9=hundreds, 1=tens, 7=ones."},
+     ,
+     {t:"mc",q:"Which number has 3 hundreds, 5 tens, 2 ones?",o:["235","325","352","532"],a:"352",h:"300+50+2=352."},
+     ,
+     {t:"mc",q:"In 874, what does the digit 8 represent?",o:["8 ones","8 tens","8 hundreds","80 hundreds"],a:"8 hundreds",h:"8 is in the hundreds place = 800."},
+     ,
+     {t:"mc",q:"What is 400 + 30 + 6?",o:["346","436","463","634"],a:"436",h:"4 hundreds, 3 tens, 6 ones = 436."}
+    ]
+   },
+   "Telling Time":{icon:"🕐",desc:"Reading clocks and understanding time",
+    ex:[
+     {q:"Minute hand on 12, hour hand on 3. What time is it?",a:"3:00",e:"When minute hand points to 12, it is exactly o'clock."},
+     {q:"Minute hand on 6, hour hand between 4 and 5. What time?",a:"4:30",e:"Minute hand on 6 = 30 minutes past. 4:30."},
+     {q:"How many minutes are in one hour?",a:"60",e:"A full turn of the minute hand = 60 minutes."}
+    ],
+    qs:[    
+     {t:"mc",q:"Hour hand → 3, Minute hand → 12. What time is it?",o:["12:03","3:00","3:12","12:30"],a:"3:00",h:"Minute hand on 12 = exactly o'clock."},
+     ,
+     {t:"mc",q:"Hour hand → 7, Minute hand → 12. What time?",o:["7:00","12:07","7:12","12:00"],a:"7:00",h:"Minute hand on 12 = o'clock. Hour hand shows 7."},
+     ,
+     {t:"mc",q:"Hour hand → 9, Minute hand → 12. What time?",o:["9:00","9:12","12:09","12:00"],a:"9:00",h:"Minute on 12 = o'clock. Hour = 9."},
+     ,
+     {t:"mc",q:"Hour hand between 4 and 5, Minute hand → 6. What time?",o:["4:06","4:30","5:30","6:04"],a:"4:30",h:"Minute hand on 6 = 30 minutes past."},
+     ,
+     {t:"mc",q:"Hour hand between 10 and 11, Minute hand → 6. What time?",o:["10:06","10:30","11:30","6:10"],a:"10:30",h:"Minute on 6 = half past. Hour just passed 10."},
+     ,
+     {t:"mc",q:"How many minutes are in 1 hour?",o:["30","50","60","100"],a:"60",h:"60 minutes = 1 full hour."},
+     ,
+     {t:"mc",q:"How many hours are in 1 day?",o:["12","16","24","48"],a:"24",h:"There are 24 hours in one full day."},
+     ,
+     {t:"mc",q:"What time is 'quarter past 3'?",o:["3:05","3:15","3:25","3:45"],a:"3:15",h:"Quarter = 15 minutes. Quarter past 3 = 3:15."},
+     ,
+     {t:"mc",q:"What time is 'half past 6'?",o:["6:15","6:30","6:45","7:00"],a:"6:30",h:"Half past = 30 minutes past. 6:30."},
+     ,
+     {t:"mc",q:"The minute hand points to 3. How many minutes past the hour?",o:["3","12","15","30"],a:"15",h:"Each number on the clock = 5 minutes. 3 × 5 = 15."},
+     ,
+     {t:"mc",q:"The minute hand points to 9. How many minutes past the hour?",o:["9","40","45","50"],a:"45",h:"9 × 5 = 45 minutes."},
+     ,
+     {t:"mc",q:"How many minutes are in half an hour?",o:["15","20","25","30"],a:"30",h:"Half of 60 = 30 minutes."},
+     ,
+     {t:"mc",q:"What time is 'quarter to 4'?",o:["3:15","3:45","4:15","4:45"],a:"3:45",h:"Quarter to = 15 minutes before the next hour."},
+     ,
+     {t:"mc",q:"Hour hand → 12, Minute hand → 12. What time?",o:["12:00","12:12","0:12","12:01"],a:"12:00",h:"Both hands on 12 = 12 o'clock."},
+     ,
+     {t:"mc",q:"Eniyi starts reading at 3:00 and reads for 1 hour. What time does she finish?",o:["3:30","4:00","5:00","2:00"],a:"4:00",h:"3:00 + 1 hour = 4:00."},
+     ,
+     {t:"mc",q:"Adebayo's lunch break starts at 12:00 and lasts 30 minutes. When does it end?",o:["12:15","12:30","1:00","12:45"],a:"12:30",h:"12:00 + 30 minutes = 12:30."}
+    ]
+   },
+   "Word Problems":{icon:"📝",desc:"Maths in real-life stories",
+    ex:[
+     {q:"A tree has 8 branches at the bottom, 6 in the middle, 4 at the top. How many branches?",a:"18",e:"Add all three: 8+6+4=18 branches."},
+     {q:"Eniyi has 12 oranges and eats 4. How many are left?",a:"8",e:"12 − 4 = 8 oranges."},
+     {q:"2 boxes of 4 red balls + 9 from last year. How many red balls in total?",a:"17",e:"2×4=8 new balls. 8+9=17 total."}
+    ],
+    qs:[    
+     {t:"sa",q:"Eniyi has 12 sweets. She gives 5 to Iyebiye. How many does Eniyi have left?",a:"7",h:"12 − 5 = ?"},
+     ,
+     {t:"sa",q:"Adebayo collects 15 sticks. He finds 7 more. How many sticks in total?",a:"22",h:"15 + 7 = ?"},
+     ,
+     {t:"mc",q:"Toluwani has 3 bags with 4 mangoes each. How many mangoes in total?",o:["7","10","12","14"],a:"12",h:"3 bags × 4 mangoes each = ?"},
+     ,
+     {t:"mc",q:"Iyebiye had 20 naira. She spends 8 naira on biscuits. How much is left?",o:["10","12","14","16"],a:"12",h:"20 − 8 = ?"},
+     ,
+     {t:"sa",q:"There are 9 boys and 8 girls in a class. How many children are there altogether?",a:"17",h:"9 + 8 = ?"},
+     ,
+     {t:"mc",q:"Kemi has 6 plates each with 3 biscuits. How many biscuits?",o:["9","15","18","24"],a:"18",h:"6 × 3 = ?"},
+     ,
+     {t:"sa",q:"Femi has 25 stickers. He gives away 10. How many remain?",a:"15",h:"25 − 10 = ?"},
+     ,
+     {t:"mc",q:"Seun reads 8 pages on Monday and 7 on Tuesday. How many pages total?",o:["13","14","15","16"],a:"15",h:"8 + 7 = ?"},
+     ,
+     {t:"mc",q:"Eniyi bakes 18 buns and gives 6 to her brother. How many buns does she have left?",o:["10","11","12","14"],a:"12",h:"18 − 6 = ?"},
+     ,
+     {t:"sa",q:"Iyebiye has 7 red beads and 8 blue beads. How many beads altogether?",a:"15",h:"7 + 8 = ?"},
+     ,
+     {t:"mc",q:"Adebayo's dog eats 3 bones each day. How many bones in 5 days?",o:["8","12","15","18"],a:"15",h:"5 days × 3 bones = ?"},
+     ,
+     {t:"sa",q:"There are 30 pupils in a class. 10 are absent. How many are present?",a:"20",h:"30 − 10 = ?"},
+     ,
+     {t:"mc",q:"Kemi has 2 boxes. Each box has 6 crayons. How many crayons in total?",o:["8","10","12","14"],a:"12",h:"2 × 6 = ?"},
+     ,
+     {t:"sa",q:"Seun scores 9 points in game one and 8 in game two. What is his total?",a:"17",h:"9 + 8 = ?"},
+     ,
+     {t:"mc",q:"There are 5 trees. Each tree has 3 birds. How many birds altogether?",o:["8","12","15","20"],a:"15",h:"5 × 3 = ?"},
+     ,
+     {t:"sa",q:"Femi has 16 pencils and loses 4. How many does he have now?",a:"12",h:"16 − 4 = ?"}
+    ]
+   }
+  },
+  eng:{
+   "Phonics & Spelling":{icon:"🔤",desc:"Sounds, letters and spelling",
+    ex:[
+     {q:"Which word rhymes with 'cat'?  — hat / dog / run",a:"hat",e:"Cat and hat both end in the sound -at."},
+     {q:"Which word starts with 'ch'?  — chair / ship / whale",a:"chair",e:"'Ch' makes the sound in 'cheese' — chair!"},
+     {q:"Spell the animal that says moo.",a:"cow",e:"C-O-W. A cow says moo!"}
+    ],
+    qs:[    
+     {t:"mc",q:"Which word rhymes with 'cat'?",o:["Dog","Hat","Run","Big"],a:"Hat",h:"Words that rhyme end with the same sound: -at."},
+     ,
+     {t:"mc",q:"Which word rhymes with 'sun'?",o:["Pan","Son","Sit","Let"],a:"Son",h:"Sun and son sound the same — -un ending."},
+     ,
+     {t:"mc",q:"Which word rhymes with 'big'?",o:["Bit","Bin","Dig","Din"],a:"Dig",h:"-ig ending: big, dig, pig, wig."},
+     ,
+     {t:"mc",q:"Which word starts with the 'ch' sound?",o:["Ship","Chair","Think","Whale"],a:"Chair",h:"Ch sounds like in cheese."},
+     ,
+     {t:"mc",q:"Which word starts with the 'sh' sound?",o:["Chair","Think","Ship","Whale"],a:"Ship",h:"Sh sounds like shhhh."},
+     ,
+     {t:"mc",q:"Which word starts with the 'th' sound?",o:["Chair","Ship","Whale","Think"],a:"Think",h:"Th makes the sound in 'the' and 'thin'."},
+     ,
+     {t:"mc",q:"Which is the correct spelling?",o:["Becuase","Becaues","Because","Becaus"],a:"Because",h:"Be-CAUSE. Cause is in the middle."},
+     ,
+     {t:"mc",q:"Which is the correct spelling?",o:["Frend","Freind","Fren","Friend"],a:"Friend",h:"I before E: fr-ie-nd."},
+     ,
+     {t:"mc",q:"Which is the correct spelling?",o:["Peple","Peopl","People","Poeple"],a:"People",h:"Peo-ple. 6 letters."},
+     ,
+     {t:"mc",q:"Which is the correct spelling?",o:["Woud","Wuold","Wolud","Would"],a:"Would",h:"W-O-U-L-D. Would, could, should."},
+     ,
+     {t:"sa",q:"Spell the animal that says 'moo':",a:"cow",h:"3 letters: C-O-W."},
+     ,
+     {t:"sa",q:"Spell the animal that lives in the sea and has fins:",a:"fish",h:"4 letters: F-I-S-H."},
+     ,
+     {t:"mc",q:"Which word has the long 'a' sound?",o:["Cat","Cap","Cake","Can"],a:"Cake",h:"Long a: cake, rain, day."},
+     ,
+     {t:"mc",q:"Which word has the long 'e' sound?",o:["Bed","Pen","Ten","Tree"],a:"Tree",h:"Long e: tree, bee, see."},
+     ,
+     {t:"mc",q:"How many syllables in 'butterfly'?",o:["1","2","3","4"],a:"3",h:"But-ter-fly = 3 parts."},
+     ,
+     {t:"mc",q:"How many syllables in 'dog'?",o:["1","2","3","4"],a:"1",h:"Dog is one short sound."}
+    ]
+   },
+   "Grammar":{icon:"📖",desc:"Nouns, verbs, adjectives and more",
+    ex:[
+     {q:"Which word is a noun?  run / apple / quickly",a:"apple",e:"A noun names a person, place, or thing. Apple is a thing."},
+     {q:"Which word is a verb?  blue / jump / soft",a:"jump",e:"Verbs are action words — things you can do."},
+     {q:"Which is an adjective in: 'The fluffy kitten sleeps'?",a:"fluffy",e:"Adjectives describe nouns. Fluffy describes what kind of kitten."}
+    ],
+    qs:[    
+     {t:"mc",q:"Which word is a NOUN?",o:["Run","Happy","Apple","Quickly"],a:"Apple",h:"Nouns name people, places, or things."},
+     ,
+     {t:"mc",q:"Which word is a VERB?",o:["Blue","Tall","Soft","Jump"],a:"Jump",h:"Verbs are action words."},
+     ,
+     {t:"mc",q:"Which word is an ADJECTIVE in: 'The fluffy kitten sleeps'?",o:["The","kitten","sleeps","fluffy"],a:"fluffy",h:"Adjectives describe nouns."},
+     ,
+     {t:"mc",q:"'Eniyi' is a ___?",o:["Verb","Adjective","Noun","Adverb"],a:"Noun",h:"Names of people are proper nouns."},
+     ,
+     {t:"mc",q:"Choose the correct verb: 'I ___ going to school.'",o:["is","are","be","am"],a:"am",h:"I + am go together."},
+     ,
+     {t:"mc",q:"Choose the correct verb: 'They ___ playing football.'",o:["is","am","be","are"],a:"are",h:"They + are go together."},
+     ,
+     {t:"mc",q:"Choose the correct verb: 'She ___ my friend.'",o:["am","are","be","is"],a:"is",h:"She/He/It + is."},
+     ,
+     {t:"mc",q:"What is the plural of 'child'?",o:["Childs","Childes","Childrens","Children"],a:"Children",h:"Irregular plural — must memorise."},
+     ,
+     {t:"mc",q:"What is the plural of 'box'?",o:["Boxs","Boxies","Boxen","Boxes"],a:"Boxes",h:"Add -es to words ending in x."},
+     ,
+     {t:"mc",q:"Which sentence uses a full stop correctly?",o:["I like cake","i like cake.","I like Cake.","I like cake."],a:"I like cake.",h:"Sentences end with a full stop."},
+     ,
+     {t:"mc",q:"Which sentence starts correctly?",o:["the dog ran.","The Dog ran.","the Dog ran.","The dog ran."],a:"The dog ran.",h:"Start with a capital. Only proper nouns get capitals mid-sentence."},
+     ,
+     {t:"mc",q:"Which is a complete sentence?",o:["The big dog.","Runs fast.","Running and jumping.","The big dog runs fast."],a:"The big dog runs fast.",h:"A complete sentence has a subject + a verb."},
+     ,
+     {t:"mc",q:"What punctuation ends a question?",o:[".","!",",","?"],a:"?",h:"Questions end with a question mark."},
+     ,
+     {t:"mc",q:"What punctuation ends an excited sentence?",o:[".","?",",","!"],a:"!",h:"Exclamation marks show excitement or surprise."},
+     ,
+     {t:"mc",q:"Which word is an ADJECTIVE?",o:["Run","Quickly","Eat","Big"],a:"Big",h:"Big describes size — it is an adjective."},
+     ,
+     {t:"mc",q:"Which word is a VERB?",o:["Happy","Table","Slow","Smile"],a:"Smile",h:"You can smile — it is an action word."}
+    ]
+   },
+   "Reading Comprehension":{icon:"📝",desc:"Understanding what you read",
+    ex:[
+     {q:"Sam has a red ball. He plays with it every day. → What colour is Sam's ball?",a:"Red",e:"Look for the describing word next to 'ball': 'red ball'."},
+     {q:"Same passage → When does Sam play?",a:"Every day",e:"The second sentence says 'every day'."},
+     {q:"'Eniyi loves to paint.' → What is Eniyi's hobby?",a:"Painting",e:"'Loves to paint' tells us painting is her hobby."}
+    ],
+    qs:[    
+     {t:"mc",q:"'Eniyi woke up early. She brushed her teeth and ate breakfast.' → What did Eniyi do FIRST?",o:["Ate breakfast","Brushed her teeth","Went to school","Woke up early"],a:"Woke up early",h:"First sentence = first thing that happened."},
+     ,
+     {t:"mc",q:"'Iyebiye has a small garden. She grows tomatoes and peppers.' → What does she grow?",o:["Only tomatoes","Only peppers","Flowers","Tomatoes and peppers"],a:"Tomatoes and peppers",h:"Second sentence says exactly what she grows."},
+     ,
+     {t:"mc",q:"'The sun rose. Birds began to sing. It was a bright, warm morning.' → What time of day?",o:["Night","Evening","Afternoon","Morning"],a:"Morning",h:"'The sun rose' and 'morning' are your clues."},
+     ,
+     {t:"mc",q:"'Adebayo loves to read books. His favourite is about animals.' → What is the book about?",o:["Plants","People","Sports","Animals"],a:"Animals",h:"'His favourite book is about animals' — right there!"},
+     ,
+     {t:"mc",q:"'Kemi felt sad because her cat was lost.' → Why was Kemi sad?",o:["She lost her dog","She failed a test","She was sick","Her cat was lost"],a:"Her cat was lost",h:"'Because her cat was lost' = reason."},
+     ,
+     {t:"mc",q:"'Toluwani runs to school every day. He is very fast.' → How does he get to school?",o:["By bus","By car","He cycles","He runs"],a:"He runs",h:"'Toluwani runs to school' — first sentence."},
+     ,
+     {t:"mc",q:"'Seun's favourite food is rice and stew. He eats it every Sunday.' → When does he eat it?",o:["Every day","Every Saturday","At school","Every Sunday"],a:"Every Sunday",h:"'He eats it every Sunday' — second sentence."},
+     ,
+     {t:"mc",q:"'The sky turned dark. Thunder rumbled. Rain began to fall.' → What is happening?",o:["Sunshine","Sandstorm","Earthquake","A storm/rain"],a:"A storm/rain",h:"Dark sky + thunder + rain = storm."},
+     ,
+     {t:"mc",q:"'Femi planted a seed. He watered it every day. Soon a small plant grew.' → What helped it grow?",o:["Sunlight only","Wind","Fertiliser","Daily watering"],a:"Daily watering",h:"'He watered it every day. Soon a plant grew.' — watering caused growth."},
+     ,
+     {t:"mc",q:"'Eniyi has three sisters: Adeola, Bisi, and Kemi.' → How many sisters does Eniyi have?",o:["1","2","4","3"],a:"3",h:"'Three sisters' — stated directly."},
+     ,
+     {t:"mc",q:"'Iyebiye read 5 books this month. Adebayo read 3.' → Who read more?",o:["Adebayo","They read the same","We cannot tell","Iyebiye"],a:"Iyebiye",h:"5 books > 3 books."},
+     ,
+     {t:"mc",q:"'The library was quiet. Toluwani tiptoed between the shelves.' → Where is Toluwani?",o:["In a shop","In a park","At home","In a library"],a:"In a library",h:"'The library' — first word of the passage."},
+     ,
+     {t:"mc",q:"'Kemi saw a rainbow after the rain.' → When did she see it?",o:["Before the rain","During the rain","At night","After the rain"],a:"After the rain",h:"'After the rain' — written exactly."},
+     ,
+     {t:"mc",q:"'Seun was tired after playing football. He fell asleep quickly.' → Why did he fall asleep?",o:["He was bored","He was sick","It was night","He was tired from playing"],a:"He was tired from playing",h:"'Tired after playing football' = reason for sleeping."},
+     ,
+     {t:"mc",q:"'Eniyi whispered so she would not wake the baby.' → Why did she whisper?",o:["She lost her voice","She was scared","The room was small","The baby was asleep"],a:"The baby was asleep",h:"She did not want to WAKE the baby."},
+     ,
+     {t:"mc",q:"'Adebayo is taller than Femi. Femi is taller than Kemi.' → Who is tallest?",o:["Femi","Kemi","They are equal","Adebayo"],a:"Adebayo",h:"Adebayo > Femi > Kemi."}
+    ]
+   }
+  }
+ },
+ 5:{
+  math:{
+   "Fractions & Decimals":{icon:"½",desc:"Fractions, decimals and percentages",
+    ex:[
+     {q:"½ + ¼ = ?",a:"3/4",e:"Convert ½ to 2/4. Then 2/4 + 1/4 = 3/4."},
+     {q:"0.5 + 0.75 = ?",a:"1.25",e:"Line up decimal points: 0.50 + 0.75 = 1.25."},
+     {q:"25% of 80 = ?",a:"20",e:"25% = ¼. Divide 80 by 4 = 20."}
+    ],
+    qs:[    
+     {t:"mc",q:"½ + ¼ = ?",o:["2/6","2/4","1/6","3/4"],a:"3/4",h:"Convert ½ to 2/4. 2/4+1/4=3/4."},
+     ,
+     {t:"mc",q:"¾ + ¼ = ?",o:["4/8","8/4","3/8","4/4"],a:"4/4",h:"3/4+1/4=4/4=1 whole."},
+     ,
+     {t:"mc",q:"⅔ − ⅓ = ?",o:["2/6","3/3","1/6","1/3"],a:"1/3",h:"Same denominator: 2−1=1. Answer: 1/3."},
+     ,
+     {t:"mc",q:"¾ × 4 = ?",o:["1","2","4","3"],a:"3",h:"3×4÷4=3."},
+     ,
+     {t:"sa",q:"0.5 + 0.75 = ?",a:"1.25",h:"0.50+0.75=1.25."},
+     ,
+     {t:"mc",q:"Which is greatest: 0.9, 0.09, 0.99, 0.909?",o:["0.9","0.09","0.909","0.99"],a:"0.99",h:"Compare digit by digit. 0.99 has 9 tenths AND 9 hundredths."},
+     ,
+     {t:"mc",q:"0.7 + 0.3 = ?",o:["0.10","0.73","1.3","1.0"],a:"1.0",h:"7 tenths + 3 tenths = 10 tenths = 1."},
+     ,
+     {t:"sa",q:"What is 25% of 80?",a:"20",h:"25%=1/4. 80÷4=20."},
+     ,
+     {t:"mc",q:"What is 50% of 60?",o:["20","25","40","30"],a:"30",h:"50%=half. 60÷2=30."},
+     ,
+     {t:"mc",q:"What is 10% of 150?",o:["10","20","25","15"],a:"15",h:"10%=divide by 10. 150÷10=15."},
+     ,
+     {t:"mc",q:"Change ⅖ to a decimal.",o:["0.2","0.25","0.5","0.4"],a:"0.4",h:"2÷5=0.4."},
+     ,
+     {t:"mc",q:"Change 0.75 to a fraction.",o:["7/5","7/10","75/10","3/4"],a:"3/4",h:"0.75=75/100=3/4."},
+     ,
+     {t:"mc",q:"What is 1.5 − 0.7?",o:["0.9","1.2","0.75","0.8"],a:"0.8",h:"1.5−0.7=0.8."},
+     ,
+     {t:"mc",q:"What is ¼ of 100?",o:["10","20","40","25"],a:"25",h:"100÷4=25."},
+     ,
+     {t:"mc",q:"What is 75% of 40?",o:["20","25","35","30"],a:"30",h:"75%=¾. 40×3÷4=30."},
+     ,
+     {t:"mc",q:"Which fraction is equivalent to 4/8?",o:["1/4","2/3","3/4","1/2"],a:"1/2",h:"4/8 ÷ 4/4 = 1/2."}
+    ]
+   },
+   "Multiplication & Division":{icon:"✖️",desc:"Larger number calculations",
+    ex:[
+     {q:"125 × 8 = ?",a:"1000",e:"100×8=800. 25×8=200. 800+200=1000."},
+     {q:"420 ÷ 7 = ?",a:"60",e:"7×6=42, so 7×60=420. Answer: 60."},
+     {q:"3 + 4 × 2 = ?",a:"11",e:"BODMAS: multiply first. 4×2=8. Then 3+8=11."}
+    ],
+    qs:[    
+     {t:"sa",q:"125 × 8 = ?",a:"1000",h:"100×8=800, 25×8=200. 800+200=1000."},
+     ,
+     {t:"mc",q:"420 ÷ 7 = ?",o:["50","70","80","60"],a:"60",h:"7×6=42, so 7×60=420."},
+     ,
+     {t:"mc",q:"3 + 4 × 2 = ?",o:["14","10","8","11"],a:"11",h:"BODMAS: multiply first. 4×2=8. 3+8=11."},
+     ,
+     {t:"sa",q:"245 × 4 = ?",a:"980",h:"200×4=800, 45×4=180. 800+180=980."},
+     ,
+     {t:"mc",q:"360 ÷ 9 = ?",o:["30","50","60","40"],a:"40",h:"9×4=36, so 9×40=360."},
+     ,
+     {t:"mc",q:"What is 14 × 6?",o:["72","80","90","84"],a:"84",h:"10×6=60, 4×6=24. 60+24=84."},
+     ,
+     {t:"mc",q:"What is 25 × 4?",o:["90","105","110","100"],a:"100",h:"25×4=100."},
+     ,
+     {t:"mc",q:"What is 32 × 5?",o:["150","155","165","160"],a:"160",h:"32×5=32×10÷2=320÷2=160."},
+     ,
+     {t:"mc",q:"(6 + 4) × 3 = ?",o:["18","22","34","30"],a:"30",h:"Brackets first: 6+4=10. Then 10×3=30."},
+     ,
+     {t:"mc",q:"What is 144 ÷ 12?",o:["10","11","13","12"],a:"12",h:"12×12=144."},
+     ,
+     {t:"mc",q:"Eniyi packs 48 books equally into 6 boxes. How many books per box?",o:["6","7","9","8"],a:"8",h:"48÷6=8."},
+     ,
+     {t:"mc",q:"What is 75 × 8?",o:["560","580","620","600"],a:"600",h:"70×8=560, 5×8=40. 560+40=600."},
+     ,
+     {t:"mc",q:"What is 360 ÷ 4?",o:["80","85","95","90"],a:"90",h:"36÷4=9, so 360÷4=90."},
+     ,
+     {t:"mc",q:"Iyebiye earns 240 naira per day. How much in 5 days?",o:["1000","1100","1400","1200"],a:"1200",h:"240×5=1200."},
+     ,
+     {t:"mc",q:"What is 23 × 7?",o:["151","171","181","161"],a:"161",h:"20×7=140, 3×7=21. 140+21=161."},
+     ,
+     {t:"mc",q:"What is 500 ÷ 25?",o:["15","25","30","20"],a:"20",h:"25×20=500."}
+    ]
+   },
+   "Geometry & Measurement":{icon:"📐",desc:"Shapes, area, perimeter and angles",
+    ex:[
+     {q:"Area of rectangle 9cm × 5cm = ?",a:"45 cm²",e:"Area = length × width. 9×5=45 cm²."},
+     {q:"Perimeter of a square with side 7cm = ?",a:"28 cm",e:"Perimeter of square = 4 × side. 4×7=28."},
+     {q:"All angles in a triangle add up to ___°?",a:"180°",e:"All triangles always add up to 180°."}
+    ],
+    qs:[    
+     {t:"mc",q:"A rectangle is 9 cm long and 5 cm wide. What is its area?",o:["14 cm²","28 cm²","40 cm²","45 cm²"],a:"45 cm²",h:"Area = length × width."},
+     ,
+     {t:"sa",q:"A square has sides of 7 cm. What is its perimeter in cm?",a:"28",h:"Perimeter of square = 4 × side."},
+     ,
+     {t:"mc",q:"What is the sum of angles in any triangle?",o:["90°","120°","360°","180°"],a:"180°",h:"All triangles add up to 180°."},
+     ,
+     {t:"mc",q:"A rectangle is 12 cm long and 4 cm wide. What is its area?",o:["16 cm²","32 cm²","56 cm²","48 cm²"],a:"48 cm²",h:"Area = 12×4=48."},
+     ,
+     {t:"mc",q:"What is the perimeter of a rectangle 8 cm long and 3 cm wide?",o:["11 cm","16 cm","24 cm","22 cm"],a:"22 cm",h:"P=2×(8+3)=2×11=22."},
+     ,
+     {t:"mc",q:"How many degrees in a right angle?",o:["45°","60°","180°","90°"],a:"90°",h:"A right angle is exactly 90°."},
+     ,
+     {t:"mc",q:"How many degrees in a straight line?",o:["90°","120°","360°","180°"],a:"180°",h:"A straight line = 180°."},
+     ,
+     {t:"mc",q:"How many degrees in a full turn?",o:["90°","180°","270°","360°"],a:"360°",h:"A full turn = 360°."},
+     ,
+     {t:"mc",q:"A square has area 64 cm². What is the side length?",o:["6 cm","7 cm","9 cm","8 cm"],a:"8 cm",h:"√64=8. 8×8=64."},
+     ,
+     {t:"mc",q:"What is the name of a 3D shape with 6 square faces?",o:["Sphere","Cone","Cylinder","Cube"],a:"Cube",h:"A cube has 6 equal square faces."},
+     ,
+     {t:"mc",q:"How many faces does a cuboid have?",o:["4","5","8","6"],a:"6",h:"Top, bottom, front, back, left, right = 6 faces."},
+     ,
+     {t:"mc",q:"Eniyi's room is 5m long and 4m wide. What is the area?",o:["9 m²","18 m²","25 m²","20 m²"],a:"20 m²",h:"Area = 5×4=20 m²."},
+     ,
+     {t:"mc",q:"A triangle has angles 50°, 60°, and ___°. What is the missing angle?",o:["60°","80°","90°","70°"],a:"70°",h:"50+60=110. 180−110=70."},
+     ,
+     {t:"mc",q:"What type of angle is 130°?",o:["Acute","Right","Reflex","Obtuse"],a:"Obtuse",h:"Obtuse = between 90° and 180°."},
+     ,
+     {t:"mc",q:"What type of angle is 45°?",o:["Right","Obtuse","Reflex","Acute"],a:"Acute",h:"Acute = less than 90°."},
+     ,
+     {t:"mc",q:"The perimeter of a square is 36 cm. What is the side length?",o:["6 cm","7 cm","8 cm","9 cm"],a:"9 cm",h:"Perimeter ÷ 4 = side. 36÷4=9."}
+    ]
+   },
+   "Algebra & Patterns":{icon:"🔣",desc:"Patterns, sequences and algebra",
+    ex:[
+     {q:"If n + 15 = 32, what is n?",a:"17",e:"Subtract 15 from both sides: n = 32 − 15 = 17."},
+     {q:"2, 6, 18, 54, __ — what comes next?",a:"162",e:"Each number × 3. 54×3=162."},
+     {q:"Mean of 4, 8, 6, 10, 7 = ?",a:"7",e:"Sum=35. Count=5. 35÷5=7."}
+    ],
+    qs:[    
+     {t:"sa",q:"If n + 15 = 32, what is n?",a:"17",h:"n = 32−15=17."},
+     ,
+     {t:"mc",q:"What is the next number? 2, 6, 18, 54, __",o:["108","112","216","162"],a:"162",h:"×3 each time. 54×3=162."},
+     ,
+     {t:"mc",q:"Find the mean of: 4, 8, 6, 10, 7",o:["6","8","9","7"],a:"7",h:"Sum=35. Count=5. 35÷5=7."},
+     ,
+     {t:"sa",q:"If 3n = 27, what is n?",a:"9",h:"n=27÷3=9."},
+     ,
+     {t:"mc",q:"What is the next number? 5, 10, 20, 40, __",o:["60","70","90","80"],a:"80",h:"×2 each time. 40×2=80."},
+     ,
+     {t:"mc",q:"If x − 7 = 12, what is x?",o:["5","15","21","19"],a:"19",h:"x=12+7=19."},
+     ,
+     {t:"mc",q:"What is the rule for: 3, 7, 11, 15, 19?",o:["+2","+3","×2","+4"],a:"+4",h:"7−3=4. Adding 4 each time."},
+     ,
+     {t:"mc",q:"Find the mode of: 3, 5, 5, 7, 8, 5, 9",o:["3","7","9","5"],a:"5",h:"Mode = the number that appears MOST often."},
+     ,
+     {t:"mc",q:"Find the median of: 2, 5, 8, 11, 14",o:["5","11","14","8"],a:"8",h:"Median = the MIDDLE number when ordered."},
+     ,
+     {t:"mc",q:"What is the range of: 3, 9, 15, 6, 12?",o:["9","10","15","12"],a:"12",h:"Range = biggest − smallest = 15−3=12."},
+     ,
+     {t:"mc",q:"What is the next number? 1, 4, 9, 16, __",o:["20","30","36","25"],a:"25",h:"Square numbers: 1²,2²,3²,4²,5²=25."},
+     ,
+     {t:"sa",q:"If 4y + 2 = 18, what is y?",a:"4",h:"4y=16. y=4."},
+     ,
+     {t:"mc",q:"Which value of n makes 2n + 3 = 11?",o:["3","5","6","4"],a:"4",h:"2n=8. n=4."},
+     ,
+     {t:"mc",q:"What is the missing number? 8, 13, __, 23, 28",o:["16","19","20","18"],a:"18",h:"+5 each time. 13+5=18."},
+     ,
+     {t:"mc",q:"Find the mean of 10, 20, 30, 40, 50",o:["25","35","40","30"],a:"30",h:"Sum=150. 150÷5=30."},
+     ,
+     {t:"mc",q:"If 5a = 45, what is a?",o:["7","8","10","9"],a:"9",h:"a=45÷5=9."}
+    ]
+   },
+   "Statistics & Ratio":{icon:"📊",desc:"Data, graphs and ratios",
+    ex:[
+     {q:"3 red marbles and 9 blue. Ratio red:blue = ?",a:"1:3",e:"3:9 ÷ 3 = 1:3."},
+     {q:"240 cookies in boxes of 12. How many boxes?",a:"20",e:"240 ÷ 12 = 20 boxes."},
+     {q:"Mean of 10, 14, 18 = ?",a:"14",e:"Sum=42. Count=3. 42÷3=14."}
+    ],
+    qs:[    
+     {t:"mc",q:"3 red and 9 blue marbles. Ratio red:blue = ?",o:["3:9","3:1","1:9","1:3"],a:"1:3",h:"Simplify 3:9 by dividing both by 3."},
+     ,
+     {t:"mc",q:"240 cookies in boxes of 12. How many boxes?",o:["15","24","28","20"],a:"20",h:"240÷12=20."},
+     ,
+     {t:"mc",q:"Find the mean of: 10, 14, 18",o:["12","15","16","14"],a:"14",h:"Sum=42. 42÷3=14."},
+     ,
+     {t:"mc",q:"In a class of 30, ratio boys:girls = 2:3. How many girls?",o:["10","12","20","18"],a:"18",h:"3 parts out of 5. 30÷5×3=18."},
+     ,
+     {t:"mc",q:"Simplify the ratio 15:25.",o:["3:4","5:3","15:25","3:5"],a:"3:5",h:"15:25 ÷ 5 = 3:5."},
+     ,
+     {t:"mc",q:"A bar chart shows Maths=25, English=20, Science=15. Total students?",o:["55","65","70","60"],a:"60",h:"25+20+15=60."},
+     ,
+     {t:"mc",q:"Eniyi scores 15, 18, 12, 20 in four tests. What is her mean score?",o:["15","16","18","16.25"],a:"16.25",h:"Sum=65. 65÷4=16.25."},
+     ,
+     {t:"mc",q:"Orange:apple ratio is 2:5 and there are 10 oranges. How many apples?",o:["20","30","4","25"],a:"25",h:"2:5. 10 oranges=2×5. Apples=5×5=25."},
+     ,
+     {t:"mc",q:"Find the median of: 12, 15, 18, 20, 25",o:["15","20","22","18"],a:"18",h:"Already in order. Middle (3rd) = 18."},
+     ,
+     {t:"mc",q:"Mode of: 6, 8, 9, 6, 10, 6, 11?",o:["8","9","10","6"],a:"6",h:"6 appears 3 times — most frequent."},
+     ,
+     {t:"mc",q:"Recipe uses flour:sugar in ratio 3:1. For 12 cups flour, how much sugar?",o:["3","6","9","4"],a:"4",h:"12÷3=4. 4×1=4 cups sugar."},
+     ,
+     {t:"mc",q:"What is the range of: 5, 12, 8, 20, 3?",o:["12","15","20","17"],a:"17",h:"Range = max−min = 20−3=17."},
+     ,
+     {t:"mc",q:"Milk:water ratio = 1:2. 6 litres of milk. How much water?",o:["3","6","8","12"],a:"12",h:"1:2. 6 litres milk. Water = 6×2=12."},
+     ,
+     {t:"mc",q:"Adebayo's scores: 80, 90, 70, 85, 75. What is his mean?",o:["78","82","84","80"],a:"80",h:"Sum=400. 400÷5=80."},
+     ,
+     {t:"mc",q:"In a pie chart, ¼ = 15 students. Total students?",o:["45","75","80","60"],a:"60",h:"¼=15. So whole=15×4=60."},
+     ,
+     {t:"mc",q:"What is the ratio of 20 minutes to 1 hour?",o:["1:2","1:4","20:100","1:3"],a:"1:3",h:"1 hour=60 min. 20:60 = 1:3."}
+    ]
+   }
+  },
+  eng:{
+   "Vocabulary & Figurative Language":{icon:"🗣️",desc:"Word meanings, idioms and figures of speech",
+    ex:[
+     {q:"'Remarkable' means?",a:"Worthy of attention",e:"Re-mark-able: worthy of being remarked on."},
+     {q:"'It's raining cats and dogs' is an example of?",a:"Idiom",e:"Idioms don't mean what they literally say."},
+     {q:"'Her voice was music to his ears' is a?",a:"Metaphor",e:"Compares without using 'like' or 'as'."}
+    ],
+    qs:[    
+     {t:"mc",q:"'Remarkable' means:",o:["Ordinary","Dangerous","Boring","Worthy of attention"],a:"Worthy of attention",h:"Re-mark-able: worthy of being remarked on."},
+     ,
+     {t:"mc",q:"'It's raining cats and dogs' is an example of:",o:["Simile","Metaphor","Alliteration","Idiom"],a:"Idiom",h:"Idioms don't mean what they literally say."},
+     ,
+     {t:"mc",q:"'Her voice was music to his ears' is a:",o:["Simile","Idiom","Personification","Metaphor"],a:"Metaphor",h:"Compares without 'like' or 'as'."},
+     ,
+     {t:"mc",q:"'She ran like the wind' is a:",o:["Idiom","Metaphor","Alliteration","Simile"],a:"Simile",h:"Similes compare using 'like' or 'as'."},
+     ,
+     {t:"mc",q:"'The trees danced in the breeze' is an example of:",o:["Simile","Metaphor","Idiom","Personification"],a:"Personification",h:"Trees can't really dance — human quality given to a non-human."},
+     ,
+     {t:"mc",q:"Which word is a synonym for 'courageous'?",o:["Timid","Careful","Lazy","Brave"],a:"Brave",h:"Courageous = brave."},
+     ,
+     {t:"mc",q:"What does 'enormous' mean?",o:["Very small","Very fast","Very quiet","Very large"],a:"Very large",h:"An elephant is enormous."},
+     ,
+     {t:"mc",q:"'Break a leg' means:",o:["Hurt yourself","Run away","Stop talking","Good luck"],a:"Good luck",h:"Actors say this before a performance — good luck!"},
+     ,
+     {t:"mc",q:"Which word is an antonym of 'ancient'?",o:["Old","Historic","Fragile","Modern"],a:"Modern",h:"Ancient = very old. Modern = new."},
+     ,
+     {t:"mc",q:"'Peter Piper picked a peck of pickled peppers' uses:",o:["Rhyme","Simile","Metaphor","Alliteration"],a:"Alliteration",h:"Alliteration = same starting sound repeated."},
+     ,
+     {t:"mc",q:"The prefix 'bi-' in 'bicycle' means:",o:["Fast","One","Wheel","Two"],a:"Two",h:"Bi=two. Bicycle has 2 wheels."},
+     ,
+     {t:"mc",q:"Which word is a synonym for 'intelligent'?",o:["Stupid","Slow","Small","Smart"],a:"Smart",h:"Intelligent = smart."},
+     ,
+     {t:"mc",q:"What does 'transparent' mean?",o:["Colourful","Opaque","Shiny","See-through"],a:"See-through",h:"Glass is transparent — you can see through it."},
+     ,
+     {t:"mc",q:"'She has butterflies in her stomach' means:",o:["She ate butterflies","She is hungry","She is happy","She is nervous"],a:"She is nervous",h:"This idiom describes a nervous feeling."},
+     ,
+     {t:"mc",q:"Which word has a prefix meaning 'not'?",o:["Replay","Preview","Postwar","Unhappy"],a:"Unhappy",h:"Un- means not."},
+     ,
+     {t:"mc",q:"What does the suffix '-less' mean?",o:["Full of","Before","Again","Without"],a:"Without",h:"Hopeless = without hope."}
+    ]
+   },
+   "Grammar & Punctuation":{icon:"✏️",desc:"Advanced grammar and punctuation",
+    ex:[
+     {q:"Identify the preposition: 'The cat sat under the table.'",a:"under",e:"Prepositions show position: under, over, through, beside."},
+     {q:"Which is an independent clause?",a:"She finished her homework",e:"Independent clause makes sense alone."},
+     {q:"'I bought apples, oranges, and bananas.' — Is punctuation correct?",a:"Yes",e:"Commas separate items in a list."}
+    ],
+    qs:[    
+     {t:"mc",q:"Identify the preposition: 'The cat sat under the table.'",o:["cat","sat","table","under"],a:"under",h:"Prepositions show position: under, over, through, beside."},
+     ,
+     {t:"mc",q:"Which is an independent clause?",o:["Because it was raining","When the bell rang","After eating lunch","She finished her homework"],a:"She finished her homework",h:"Independent clause makes sense alone."},
+     ,
+     {t:"mc",q:"Which sentence uses commas correctly?",o:["I bought apples oranges, and bananas.","I bought, apples, oranges and bananas.","I, bought apples oranges and bananas.","I bought apples, oranges, and bananas."],a:"I bought apples, oranges, and bananas.",h:"Commas separate items in a list."},
+     ,
+     {t:"mc",q:"What type of sentence is: 'Please close the door quietly.'?",o:["Declarative","Interrogative","Exclamatory","Imperative"],a:"Imperative",h:"Imperative sentences give commands."},
+     ,
+     {t:"mc",q:"Identify the conjunction in: 'I wanted to go but it was raining.'",o:["wanted","go","raining","but"],a:"but",h:"Conjunctions join clauses: and, but, or, because..."},
+     ,
+     {t:"mc",q:"Which sentence is in the PAST tense?",o:["She runs to school.","She will run.","She is running.","She ran to school."],a:"She ran to school.",h:"'Ran' is past tense of 'run'."},
+     ,
+     {t:"mc",q:"Which sentence is in the FUTURE tense?",o:["Eniyi ate yam.","Eniyi eats yam.","Eniyi is eating yam.","Eniyi will eat yam."],a:"Eniyi will eat yam.",h:"Future tense uses 'will' + verb."},
+     ,
+     {t:"mc",q:"What is the SUBJECT in: 'The hungry dog ate the bone.'?",o:["hungry","ate","bone","dog"],a:"dog",h:"Subject = who/what does the action."},
+     ,
+     {t:"mc",q:"What is the OBJECT in: 'Iyebiye wrote a letter.'?",o:["Iyebiye","wrote","a","letter"],a:"letter",h:"Object = what receives the action."},
+     ,
+     {t:"mc",q:"Which word is a PRONOUN in: 'Adebayo said he was tired.'?",o:["Adebayo","said","tired","he"],a:"he",h:"Pronouns replace nouns: he, she, it, they, we."},
+     ,
+     {t:"mc",q:"Which punctuation is used for direct speech?",o:["( )","[ ]","< >","\" \""],a:"\" \"",h:"Speech marks surround spoken words."},
+     ,
+     {t:"mc",q:"What is an apostrophe used for in: 'Eniyi's book'?",o:["Plural","Contraction","Exclamation","Possession"],a:"Possession",h:"Apostrophe + s shows belonging."},
+     ,
+     {t:"mc",q:"What is an apostrophe used for in: 'don't'?",o:["Plural","Possession","Exclamation","Contraction"],a:"Contraction",h:"Don't = do not. Apostrophe replaces the missing letter."},
+     ,
+     {t:"mc",q:"Which sentence uses a colon correctly?",o:["She had three pets, a dog: a cat, and a fish.","She had: three pets a dog, a cat, and a fish.","She had three pets a dog, a cat, and: a fish.","She had three pets: a dog, a cat, and a fish."],a:"She had three pets: a dog, a cat, and a fish.",h:"Colons introduce a list."},
+     ,
+     {t:"mc",q:"Which is a COMPOUND sentence?",o:["Eniyi ran.","Because Eniyi ran.","Running fast.","Eniyi ran and Iyebiye walked."],a:"Eniyi ran and Iyebiye walked.",h:"Compound = two independent clauses joined by a conjunction."},
+     ,
+     {t:"mc",q:"Which is a COMPLEX sentence?",o:["Eniyi ran.","Eniyi ran and Iyebiye walked.","Running in the rain.","Although it was raining, Eniyi ran."],a:"Although it was raining, Eniyi ran.",h:"Complex = independent + dependent clause."}
+    ]
+   },
+   "Reading Comprehension":{icon:"📖",desc:"Understanding and analysing texts",
+    ex:[
+     {q:"'The library was quiet as a whisper. Maya tiptoed between shelves.' → Where is Maya?",a:"In a library",e:"'The library was quiet' tells us directly."},
+     {q:"Same passage: Why does Maya tiptoe?",a:"She doesn't want to disturb the quiet",e:"'Quiet as a whisper' + tiptoe = careful not to make noise."},
+     {q:"A paragraph explains steps to bake a cake. This is which text structure?",a:"Chronological/Sequence",e:"Steps in order = sequence text structure."}
+    ],
+    qs:[    
+     {t:"mc",q:"'The library was quiet as a whisper. Maya tiptoed between shelves.' → Where is Maya?",o:["In a classroom","In a store","In a museum","In a library"],a:"In a library",h:"'The library' — first word of the passage."},
+     ,
+     {t:"mc",q:"Same passage: Why does Maya tiptoe?",o:["She is scared","She is playing a game","Her shoes are loud","She doesn't want to disturb the quiet"],a:"She doesn't want to disturb the quiet",h:"'Quiet as a whisper' — she's being careful."},
+     ,
+     {t:"mc",q:"A paragraph explains how to bake a cake step-by-step. Which text structure?",o:["Compare and Contrast","Cause and Effect","Problem and Solution","Chronological/Sequence"],a:"Chronological/Sequence",h:"Steps in order = sequence structure."},
+     ,
+     {t:"mc",q:"'Despite the heavy rain, Eniyi walked to school. She didn't want to miss her test.' → What can we infer about Eniyi?",o:["She loves rain","She is irresponsible","She forgot her umbrella","She is determined and responsible"],a:"She is determined and responsible",h:"Walking through rain to not miss a test shows determination."},
+     ,
+     {t:"mc",q:"'Many birds migrate south for winter to escape the cold and find food.' → What is the MAIN IDEA?",o:["Birds are colourful","Winter is cold","Birds eat a lot","Birds migrate south to escape cold and find food"],a:"Birds migrate south to escape cold and find food",h:"The main idea covers the whole paragraph."},
+     ,
+     {t:"mc",q:"'The government must act now. Rising temperatures are destroying ecosystems.' → The author's purpose is to:",o:["Entertain","Describe nature","Inform only","Persuade"],a:"Persuade",h:"'Must act now' = persuasive language."},
+     ,
+     {t:"mc",q:"'First, mix the flour. Next, add milk. Finally, cook in a pan.' → This text type is:",o:["Fiction","Persuasive","Biography","Instructions"],a:"Instructions",h:"Step-by-step with 'first, next, finally' = instructions."},
+     ,
+     {t:"mc",q:"'Iyebiye's hands trembled as she opened the envelope.' → What is she probably feeling?",o:["Boredom","Anger","Hunger","Nervousness or excitement"],a:"Nervousness or excitement",h:"Trembling hands = nervous or excited."},
+     ,
+     {t:"mc",q:"What does 'infer' mean when reading?",o:["To read aloud","To look up a word","To summarise","To work out something not directly stated"],a:"To work out something not directly stated",h:"Inference = reading between the lines."},
+     ,
+     {t:"mc",q:"'Although Adebayo was afraid, he stepped forward to speak.' → Which word shows contrast?",o:["afraid","stepped","forward","Although"],a:"Although",h:"'Although' introduces a contrasting idea."},
+     ,
+     {t:"mc",q:"A text COMPARES advantages and disadvantages of city vs village life. Which text structure?",o:["Sequence","Cause and Effect","Problem and Solution","Compare and Contrast"],a:"Compare and Contrast",h:"Similarities and differences = compare and contrast."},
+     ,
+     {t:"mc",q:"'Because the river flooded, many families lost their homes.' → This shows which text structure?",o:["Sequence","Compare and Contrast","Description","Cause and Effect"],a:"Cause and Effect",h:"'Because' introduces a cause."},
+     ,
+     {t:"mc",q:"'The evidence clearly shows exercise improves mental health.' → Fact or Opinion?",o:["Opinion","Neither","Both","Fact"],a:"Fact",h:"'Evidence clearly shows' = factual claim backed by evidence."},
+     ,
+     {t:"mc",q:"'I believe school holidays are too short.' → Fact or Opinion?",o:["Fact","Neither","Both","Opinion"],a:"Opinion",h:"'I believe' = personal view = opinion."},
+     ,
+     {t:"mc",q:"'Kemi was the most talented student.' → Fact or Opinion?",o:["Fact","Neither","Both","Opinion"],a:"Opinion",h:"'Most talented' is a judgement, not a measurable fact."},
+     ,
+     {t:"mc",q:"What is the PURPOSE of a persuasive text?",o:["To tell a story","To give instructions","To describe","To change the reader's mind"],a:"To change the reader's mind",h:"Persuasive texts argue a point and want you to agree."}
+    ]
+   },
+   "Writing & Text Structure":{icon:"📝",desc:"Writing skills and text analysis",
+    ex:[
+     {q:"A writer uses many facts, dates and statistics. The author's purpose is mainly:",a:"Inform",e:"Facts and data = informational writing."},
+     {q:"'Please close the door quietly.' — What type of sentence is this?",a:"Imperative",e:"Imperative sentences give commands."},
+     {q:"'Firstly, secondly, finally' are called:",a:"Connectives",e:"They link ideas and structure writing."}
+    ],
+    qs:[    
+     {t:"mc",q:"A writer uses many facts, dates and statistics. The author's purpose is mainly to:",o:["Entertain","Persuade","Frighten","Inform"],a:"Inform",h:"Facts and data = informational writing."},
+     ,
+     {t:"mc",q:"Which is the BEST opening sentence for a persuasive essay?",o:["Once upon a time...","In this essay I will discuss...","The end.","Did you know millions of animals are endangered every year?"],a:"Did you know millions of animals are endangered every year?",h:"A rhetorical question hooks the reader."},
+     ,
+     {t:"mc",q:"Which word/phrase is MOST persuasive?",o:["Perhaps","It could be argued","Some people think","You must agree that"],a:"You must agree that",h:"'You must agree' is the most direct and persuasive."},
+     ,
+     {t:"mc",q:"A RECOUNT text is used to:",o:["Give instructions","Persuade","Describe a place","Retell past events in order"],a:"Retell past events in order",h:"Recount = re-telling what happened."},
+     ,
+     {t:"mc",q:"Which text would most likely use subheadings?",o:["A short story","A poem","A personal letter","A non-fiction report"],a:"A non-fiction report",h:"Reports use subheadings to organise information."},
+     ,
+     {t:"mc",q:"What is the PURPOSE of a CONCLUSION paragraph?",o:["To introduce new ideas","To give examples","To ask questions","To summarise and end the text"],a:"To summarise and end the text",h:"Conclusions wrap up the main ideas."},
+     ,
+     {t:"mc",q:"Which connective shows CONTRAST?",o:["Furthermore","In addition","Therefore","However"],a:"However",h:"However = but / on the other hand."},
+     ,
+     {t:"mc",q:"Which connective shows a RESULT or EFFECT?",o:["However","Moreover","Although","Therefore"],a:"Therefore",h:"Therefore = as a result."},
+     ,
+     {t:"mc",q:"Which connective ADDS information?",o:["However","Therefore","Although","Furthermore"],a:"Furthermore",h:"Furthermore = in addition / also."},
+     ,
+     {t:"mc",q:"Which is a FORMAL way to write: 'I wanna go home'?",o:["I wanna go home.","I want 2 go home.","I really wanna go.","I would like to go home."],a:"I would like to go home.",h:"Formal writing avoids slang."},
+     ,
+     {t:"mc",q:"What is a 'rhetorical question'?",o:["A question needing a long answer","A maths question","A question in an exam","A question asked for effect, not expecting an answer"],a:"A question asked for effect, not expecting an answer",h:"'Isn't it obvious?' — not really expecting a reply."},
+     ,
+     {t:"mc",q:"Which is the best FORMAL LETTER opening?",o:["Hey there,","Yo what's up,","HI THERE!!!","Dear Mr Okafor,"],a:"Dear Mr Okafor,",h:"Formal letters begin with 'Dear [Name/Title]'."},
+     ,
+     {t:"mc",q:"What should a PARAGRAPH always have?",o:["A title","Bullet points","At least 5 sentences","A topic sentence and supporting details"],a:"A topic sentence and supporting details",h:"Topic sentence = main idea. Supporting details = evidence."},
+     ,
+     {t:"mc",q:"Which technique makes writing more vivid?",o:["Short sentences only","Using only numbers","Writing in capital letters","Sensory language (sight, sound, smell, touch, taste)"],a:"Sensory language (sight, sound, smell, touch, taste)",h:"Descriptive writing appeals to the five senses."},
+     ,
+     {t:"mc",q:"What is the correct layout for a LETTER ending?",o:["sincerely yours","YOURS SINCERELY!","Love and kisses","Yours sincerely"],a:"Yours sincerely",h:"Formal letters end 'Yours sincerely'."},
+     ,
+     {t:"mc",q:"Which sentence uses ACTIVE voice?",o:["The cake was eaten by Eniyi.","The game was played.","The door was locked.","Eniyi ate the cake."],a:"Eniyi ate the cake.",h:"Active voice: subject does the action."}
+    ]
+   }
+  }
+ }
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let S={student:null,grade:null,sub:null,topic:null,qs:[],ans:[],cur:0,hints:[],done:false};
+let subs=JSON.parse(localStorage.getItem('bm_subs')||'[]');
+
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function ss(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function eq(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+// ── LOGIN ───────────────────────────────────────────────────────────────────
+function doLogin(){
+  const code=document.getElementById('codeIn').value.trim();
+  const err=document.getElementById('lerr');
+  const m=CODES[code];
+  if(m){
+    S.student={name:m.n,grade:m.g,code};
+    err.style.display='none';
+    document.getElementById('sname').textContent=m.n;
+    if(m.g){S.grade=m.g;document.getElementById('gdis').textContent=m.g;ss('subjectScreen');}
+    else ss('gradeScreen');
+  } else {err.style.display='block';}
+}
+document.getElementById('codeIn').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
+
+// ── GRADE / SUBJECT ─────────────────────────────────────────────────────────
+function pickGrade(g){S.grade=g;document.getElementById('gdis').textContent=g;ss('subjectScreen');}
+
+function pickSub(s){
+  S.sub=s;
+  renderTopics();
+  ss('topicScreen');
+}
+
+// ── TOPICS ──────────────────────────────────────────────────────────────────
+function renderTopics(){
+  const topics=QB[S.grade][S.sub];
+  document.getElementById('topicTitle').textContent=`Grade ${S.grade} — ${S.sub==='math'?'Mathematics':'English'} Topics`;
+  document.getElementById('tgrid').innerHTML=Object.entries(topics).map(([name,d])=>`
+    <div class="tcard" onclick="pickTopic('${eq(name)}')">
+      <div class="tic">${d.icon}</div>
+      <h4>${name}</h4>
+      <p>${d.desc}</p>
+    </div>`).join('');
+}
+
+function pickTopic(name){
+  S.topic=name;
+  const d=QB[S.grade][S.sub][name];
+  document.getElementById('extitle').textContent=`📖 ${name} — Study These First`;
+  document.getElementById('exsub').textContent=`Look carefully before starting your quiz!`;
+  document.getElementById('excont').innerHTML=d.ex.map((e,i)=>`
+    <div class="excard">
+      <div class="exnum">Example ${i+1}</div>
+      <div class="exq">❓ ${e.q}</div>
+      <div class="exans">✅ Answer: ${e.a}</div>
+      <div class="exexp">💡 ${e.e}</div>
+    </div>`).join('');
+  ss('examplesScreen');
+}
+
+function startQuiz(){
+  const d=QB[S.grade][S.sub][S.topic];
+  S.qs=shuffle([...d.qs]).slice(0,20);
+  S.ans=S.qs.map(()=>({sel:null,ok:null}));
+  S.hints=S.qs.map(()=>false);
+  S.cur=0;S.done=false;
+  document.getElementById('qgb').textContent=`Grade ${S.grade}`;
+  const sb=document.getElementById('qsb');
+  sb.textContent=S.sub==='math'?'🔢 Maths':'📚 English';
+  sb.className='badge '+(S.sub==='math'?'math':'eng');
+  document.getElementById('qtb').textContent=S.topic;
+  document.getElementById('qstu').textContent=`👤 ${S.student.name}`;
+  ss('quizScreen');
+  renderQ();
+}
+
+// ── QUIZ RENDER ──────────────────────────────────────────────────────────────
+function renderQ(){
+  const total=S.qs.length,i=S.cur,q=S.qs[i],a=S.ans[i];
+  const done=a.ok!==null,last=i===total-1;
+  document.getElementById('plbl').textContent=`Question ${i+1} of ${total}`;
+  document.getElementById('pfill').style.width=`${((i+1)/total)*100}%`;
+
+  let inp='';
+  if(q.t==='mc'){
+    const L=['A','B','C','D'];
+    inp=`<div class="opts">`+q.o.map((opt,oi)=>{
+      let cls='opt';
+      if(done){if(opt===q.a)cls+=' correct';else if(opt===a.sel)cls+=' wrong';}
+      else if(opt===a.sel)cls+=' sel';
+      return `<button class="${cls}" onclick="pickOpt(${JSON.stringify(opt)},this)" ${done?'disabled':''}><span class="ol">${L[oi]}</span>${opt}</button>`;
+    }).join('')+`</div>`;
+  } else {
+    let sc='';if(done)sc=a.ok?' correct':' wrong';
+    inp=`<input type="text" class="sain${sc}" id="sain" placeholder="Type your answer..." value="${eq(a.sel||'')}" ${done?'disabled':''}>`;
+  }
+
+  let fb='';
+  if(done){
+    fb=a.ok
+      ?`<div class="qfb correct">✅ Correct! Great work, ${S.student.name}!</div>`
+      :`<div class="qfb wrong">❌ Not quite! The correct answer is: <strong>${q.a}</strong></div>`;
+  }
+
+  let nav='';
+  if(done){
+    nav=last?`<button class="bfin" onclick="submitQ()">Submit Quiz 🎯</button>`:`<button class="bnext" onclick="nextQ()">Next Question →</button>`;
+  } else {
+    if(q.t==='mc'&&a.sel) nav=`<button class="bcheck" onclick="chkMC()">Check Answer ✓</button>`;
+    else if(q.t==='sa') nav=`<button class="bcheck" onclick="chkSA()">Check Answer ✓</button>`;
+  }
+
+  document.getElementById('qbody').innerHTML=`
+    <div class="qcard">
+      <div class="qno">Question ${i+1} of ${total} · ${S.topic}</div>
+      <div class="qtxt">${q.q}</div>
+      ${inp}
+      ${fb}
+      <div class="harea">
+        <button class="htog" onclick="togH(${i})">💡 ${S.hints[i]?'Hide Hint':'Need a Hint?'}</button>
+        <div class="hbox ${S.hints[i]?'show':''}">${q.h}</div>
+      </div>
+    </div>
+    <div class="qnav">${nav}</div>`;
+}
+
+function pickOpt(val,btn){
+  S.ans[S.cur].sel=val;
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.querySelector('.qnav').innerHTML=`<button class="bcheck" onclick="chkMC()">Check Answer ✓</button>`;
+}
+
+function chkMC(){
+  const i=S.cur,q=S.qs[i],sel=S.ans[i].sel;
+  if(!sel)return;
+  S.ans[i].ok=(sel===q.a);
+  renderQ();
+}
+
+function chkSA(){
+  const i=S.cur,q=S.qs[i];
+  const inp=document.getElementById('sain');
+  if(!inp)return;
+  const val=inp.value.trim();
+  if(!val)return;
+  S.ans[i].sel=val;
+  S.ans[i].ok=val.toLowerCase()===String(q.a).toLowerCase();
+  renderQ();
+}
+
+function nextQ(){if(S.cur<S.qs.length-1){S.cur++;renderQ();}}
+function togH(i){S.hints[i]=!S.hints[i];renderQ();}
+
+// ── SUBMIT ───────────────────────────────────────────────────────────────────
+function submitQ(){
+  const total=S.qs.length,correct=S.ans.filter(a=>a.ok).length,pct=Math.round((correct/total)*100);
+  const sub={id:Date.now(),student:S.student.name,code:S.student.code,grade:`Grade ${S.grade}`,sub:S.sub,topic:S.topic,score:`${correct}/${total}`,pct,time:new Date().toLocaleString(),details:S.qs.map((q,i)=>({q:q.q.slice(0,70)+(q.q.length>70?'...':''),ok:S.ans[i].ok,given:S.ans[i].sel,right:q.a}))};
+  subs.push(sub);
+  localStorage.setItem('bm_subs',JSON.stringify(subs));
+  const c=document.getElementById('scirc');
+  c.className='scirc '+(pct>=80?'high':pct>=50?'mid':'low');
+  document.getElementById('snum').textContent=`${correct}/${total}`;
+  const tier=pct>=80?0:pct>=50?1:2;
+  const hs=['🏆 Amazing! You are a star!','⭐ Great effort!','💪 Keep practising!'];
+  const ts=[`${pct}% — Brilliant, ${S.student.name}!`,`${pct}% — Good job! Review the ones you missed.`,`${pct}% — Don't give up! Use the hints and try again.`];
+  document.getElementById('rh').textContent=hs[tier];
+  document.getElementById('rt').textContent=ts[tier];
+  document.getElementById('bdown').innerHTML=S.qs.map((q,i)=>{
+    const a=S.ans[i];
+    return `<div class="bdi ${a.ok?'c':'w'}"><div class="bdq">${q.q.slice(0,80)}${q.q.length>80?'...':''}</div><span class="bdb">${a.ok?'✅ Correct':'❌ Wrong'}</span></div>`;
+  }).join('');
+  ss('resultsScreen');
+}
+
+function redoQ(){startQuiz();}
+function goHome(){ss('loginScreen');document.getElementById('codeIn').value='';S={student:null,grade:null,sub:null,topic:null,qs:[],ans:[],cur:0,hints:[],done:false};}
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+function showAL(){document.getElementById('alov').style.display='flex';setTimeout(()=>document.getElementById('apw').focus(),100);}
+function chkA(){
+  const pw=document.getElementById('apw').value;
+  if(pw===APW){document.getElementById('alov').style.display='none';document.getElementById('apw').value='';renderAdmin('all');ss('adminScreen');}
+  else document.getElementById('aperr').textContent='❌ Wrong password.';
+}
+document.getElementById('apw').addEventListener('keypress',e=>{if(e.key==='Enter')chkA();});
+
+function filt(f,btn){document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderAdmin(f);}
+
+function renderAdmin(filter){
+  subs=JSON.parse(localStorage.getItem('bm_subs')||'[]');
+  let fl=filter==='all'?subs:subs.filter(s=>s.grade===filter||s.sub===filter);
+  const total=subs.length,avg=total?Math.round(subs.reduce((s,x)=>s+x.pct,0)/total):0,hi=total?Math.max(...subs.map(s=>s.pct)):0;
+  document.getElementById('astats').innerHTML=`
+    <div class="sc"><div class="sv">${total}</div><div class="sl">Total Submissions</div></div>
+    <div class="sc"><div class="sv">${avg}%</div><div class="sl">Average Score</div></div>
+    <div class="sc"><div class="sv">${hi}%</div><div class="sl">Top Score</div></div>
+    <div class="sc"><div class="sv">${[...new Set(subs.map(s=>s.student))].length}</div><div class="sl">Students</div></div>`;
+  const wrap=document.getElementById('atbl');
+  if(fl.length===0){wrap.innerHTML='<div class="empty">📭 No submissions yet.</div>';return;}
+  const rows=fl.map(s=>{
+    const cls=s.pct>=80?'h':s.pct>=50?'m':'l';
+    const did=`d${s.id}`;
+    const da=s.details.map(d=>`<div class="da ${d.ok?'c':'w'}">${d.ok?'✅':'❌'} ${d.q.slice(0,50)} → <b>${d.given||'(blank)'}</b>${!d.ok?` ✔ ${d.right}`:''}</div>`).join('');
+    return `<tr>
+      <td><strong>${s.student}</strong><br><span style="font-size:11px;color:var(--muted)">${s.code}</span></td>
+      <td>${s.grade}</td>
+      <td style="text-transform:capitalize">${s.sub}</td>
+      <td>${s.topic}</td>
+      <td><span class="spi ${cls}">${s.score} (${s.pct}%)</span></td>
+      <td style="font-size:12px;color:var(--muted)">${s.time}</td>
+      <td><button class="db" onclick="togD('${did}',this)">Details ▼</button></td>
+    </tr>
+    <tr class="dr" id="${did}"><td colspan="7"><div class="das">${da}</div></td></tr>`;
+  }).join('');
+  wrap.innerHTML=`<table><thead><tr><th>Student</th><th>Grade</th><th>Subject</th><th>Topic</th><th>Score</th><th>Time</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function togD(id,btn){const r=document.getElementById(id);if(r.classList.contains('open')){r.classList.remove('open');btn.textContent='Details ▼';}else{r.classList.add('open');btn.textContent='Details ▲';}}
+</script>
+</body>
+</html>
