@@ -1192,16 +1192,12 @@ function startQuiz(){
 // ── QUIZ RENDER ──────────────────────────────────────────────────────────────
 function renderQ(){
   const total=S.qs.length,i=S.cur,q=S.qs[i],a=S.ans[i];
-  const isEng=S.sub==='eng';
-  const done=isEng||a.ok!==null,last=i===total-1;
+  const done=a.ok!==null,last=i===total-1;
   document.getElementById('plbl').textContent=`Question ${i+1} of ${total}`;
   document.getElementById('pfill').style.width=`${((i+1)/total)*100}%`;
 
   let inp='';
-  if(isEng){
-    // English: read-only mode — show question text only, no answer interaction
-    inp='<div style="margin-top:16px;padding:14px 18px;background:#F0EAF8;border-radius:12px;font-size:15px;font-weight:600;color:var(--lav);text-align:center">📖 Read the question above, then click Continue</div>';
-  } else if(q.t==='mc'){
+  if(q.t==='mc'){
     const L=['A','B','C','D'];
     inp=`<div class="opts">`+q.o.map((opt,oi)=>{
       let cls='opt';
@@ -1215,16 +1211,14 @@ function renderQ(){
   }
 
   let fb='';
-  if(done&&!isEng){
+  if(done){
     fb=a.ok
       ?`<div class="qfb correct">✅ Correct! Great work, ${S.student.name}!</div>`
       :`<div class="qfb wrong">❌ Not quite! The correct answer is: <strong>${q.a}</strong></div>`;
   }
 
   let nav='';
-  if(isEng){
-    nav=last?`<button class="bfin" onclick="submitQ()">Finish Review ✅</button>`:`<button class="bnext" onclick="nextQ()">Continue →</button>`;
-  } else if(done){
+  if(done){
     nav=last?`<button class="bfin" onclick="submitQ()">Submit Quiz 🎯</button>`:`<button class="bnext" onclick="nextQ()">Next Question →</button>`;
   } else {
     if(q.t==='mc'&&a.sel) nav=`<button class="bcheck" onclick="chkMC()">Check Answer ✓</button>`;
