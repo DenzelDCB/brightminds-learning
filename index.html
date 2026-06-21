@@ -302,7 +302,20 @@ const CODES={
   "TEST":{n:"Tester",g:null}
 };
 const APW="teacher2024";
-
+  
+function doLogin(){
+  const code=document.getElementById('codeIn').value.trim();
+  const m=CODES[code];
+  const err=document.getElementById('lerr');
+  if(m){
+    S.student={name:m.n,code};
+    err.style.display='none';
+    document.getElementById('sname').textContent=m.n;
+    if(m.g){S.grade=m.g;document.getElementById('gdis').textContent=m.g;ss('subjectScr');}
+    else ss('gradeScr');
+  } else err.style.display='block';
+}
+document.getElementById('codeIn').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 // ── QUESTION BANK ──────────────────────────────────────────────────────────
 const QB={
  2:{
@@ -704,20 +717,6 @@ let subs=JSON.parse(localStorage.getItem('bm_subs')||'[]');
 
 function ss(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-
-function doLogin(){
-  const code=document.getElementById('codeIn').value.trim();
-  const m=CODES[code];
-  const err=document.getElementById('lerr');
-  if(m){
-    S.student={name:m.n,code};
-    err.style.display='none';
-    document.getElementById('sname').textContent=m.n;
-    if(m.g){S.grade=m.g;document.getElementById('gdis').textContent=m.g;ss('subjectScr');}
-    else ss('gradeScr');
-  } else err.style.display='block';
-}
-document.getElementById('codeIn').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 
 function pickGrade(g){S.grade=g;document.getElementById('gdis').textContent=g;ss('subjectScr');}
 
