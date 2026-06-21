@@ -767,13 +767,14 @@ function startQuiz(){
 
 function renderQ(){
   const total=S.qs.length,i=S.cur,q=S.qs[i],a=S.ans[i];
-  const done=a.ok!==null,last=i===total-1;
+  let done=a.ok!==null,last=i===total-1;
   document.getElementById('plbl').textContent=`Question ${i+1} of ${total}`;
   document.getElementById('pfill').style.width=`${((i+1)/total)*100}%`;
 
   let inp='';
   if(q.t==='mc'){
     const L=['A','B','C','D'];
+    done = false;
     inp=`<div class="opts">`+q.o.map((opt,oi)=>{
       let cls='opt';
       if(done){if(opt===q.a)cls+=' correct';else if(opt===a.sel)cls+=' wrong';}
@@ -821,9 +822,12 @@ function renderQ(){
 
 function pickOpt(val,btn){
   S.ans[S.cur].sel=val;
+  const qnav = document.querySelector('.qnav');
+  if(qnav){
+    qnav.innerHTML=`<button class="btn btn-mint" onclick="chkMC()">Check Answer ✓</button>`;
+  }
   document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
-  document.querySelector('.qnav').innerHTML=`<button class="btn btn-mint" onclick="chkMC()">Check Answer ✓</button>`;
 }
 function chkMC(){const i=S.cur,q=S.qs[i];if(!S.ans[i].sel)return;S.ans[i].ok=S.ans[i].sel===q.a;renderQ();}
 function chkSA(){
