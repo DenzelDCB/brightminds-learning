@@ -6,6 +6,7 @@
 <title>BrightMinds Learning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--sky:#4A90D9;--sun:#F5A623;--mint:#3DBFA0;--coral:#F26B6B;--lav:#9B6FD4;--bg:#F7F9FF;--white:#fff;--text:#2C3E50;--muted:#7F8C8D;--brd:#E0E8F5;--ok:#27AE60;--bad:#E74C3C;--hint:#F39C12;--sh:0 4px 20px rgba(74,144,217,.12);--r:14px}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -187,8 +188,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <h2>Welcome, <span id="sname" style="color:var(--sky)"></span>! 👋</h2>
     <p class="sub">Choose your grade to begin</p>
     <div class="cards">
-      <div class="card sky" onclick="pickGrade(2)"><div class="ic">🌱</div><h3>Grade 2</h3><p>Maths &amp; English</p></div>
-      <div class="card sky" onclick="pickGrade(5)"><div class="ic">🚀</div><h3>Grade 5</h3><p>Maths &amp; English</p></div>
+      <div class="card sky" onclick="pickGrade(2)"><div class="ic">🌱</div><h3>Grade 2</h3><p>Maths & English</p></div>
+      <div class="card sky" onclick="pickGrade(5)"><div class="ic">🚀</div><h3>Grade 5</h3><p>Maths & English</p></div>
     </div>
   </div></div>
 </div>
@@ -200,8 +201,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <h2>Grade <span id="gdis"></span> — Pick a Subject</h2>
     <p class="sub">What would you like to study today?</p>
     <div class="cards">
-      <div class="card mint" onclick="pickSub('math')"><div class="ic">🔢</div><h3>Mathematics</h3><p>Numbers &amp; shapes</p></div>
-      <div class="card lav" onclick="pickSub('eng')"><div class="ic">📚</div><h3>English</h3><p>Reading &amp; language</p></div>
+      <div class="card mint" onclick="pickSub('math')"><div class="ic">🔢</div><h3>Mathematics</h3><p>Numbers & shapes</p></div>
+      <div class="card lav" onclick="pickSub('eng')"><div class="ic">📚</div><h3>English</h3><p>Reading & language</p></div>
     </div>
   </div></div>
 </div>
@@ -265,12 +266,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <h2>📊 Student Submissions</h2>
     <p class="sub">All quiz results, auto-marked</p>
     <div class="srow" id="astats"></div>
+    <h3 style="margin-top:24px;margin-bottom:8px;font-family:'Fredoka One',cursive;color:var(--text);font-size:20px">👥 Per Student Overview</h3>
+    <div class="atbl" id="ustats" style="margin-bottom:24px"></div>
     <div class="frow">
       <button class="fb on" onclick="filt('all',this)">All</button>
       <button class="fb" onclick="filt('Grade 2',this)">Grade 2</button>
       <button class="fb" onclick="filt('Grade 5',this)">Grade 5</button>
       <button class="fb" onclick="filt('math',this)">Maths</button>
       <button class="fb" onclick="filt('eng',this)">English</button>
+      <button class="fb on" onclick="filt('all',this)">Refresh</button>
     </div>
     <div class="atbl" id="atbl"></div>
   </div>
@@ -291,11 +295,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 <script>
 // ── CODES ──────────────────────────────────────────────────────────────────
 const CODES={
-  "Eni3y":{n:"Eniiyi",g:2},
-  "Iye2xb":{n:"Iyebiye",g:5},
-  "IE23":{n:"Tester",g:null}
+  "Eniy3":{n:"Eniiyi",g:2},
+  "Iyeb2":{n:"Iyebiye",g:5},
+  "TEST3r":{n:"Test Student",g:null}
 };
 const APW="teacher2024";
+const SUPABASE_URL='https://ohscrlnsiuavvlmtlugb.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9oc2NybG5zaXVhdnZsbXRsdWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTEwNDgsImV4cCI6MjA2NjE4NzA0OH0.xZ-vK3_AyH-1cvdlxBSNcv7P_68Z60G7YgQcDVA-RfI';
+supabase=window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   
 function doLogin(){
   const code=document.getElementById('codeIn').value.trim();
@@ -440,8 +447,8 @@ const QB={
      {t:"mc",q:"Hour hand → 9, Minute hand → 12. What time?",o:["9:00","9:12","12:09","12:00"],a:"9:00",h:"Minute on 12 = o'clock. Hour = 9."},
      {t:"mc",q:"Hour hand between 4 and 5, Minute hand → 6. What time?",o:["4:06","4:30","5:30","6:04"],a:"4:30",h:"Minute hand on 6 = 30 minutes past."},
      {t:"mc",q:"Hour hand between 10 and 11, Minute hand → 6. What time?",o:["10:06","10:30","11:30","6:10"],a:"10:30",h:"Minute on 6 = half past. Hour just passed 10."},
-     {t:"mc",q:"How many minutes are in 1 hour?",o:["30","50","60","100"],a:"60",h:"60 minutes = 1 full hour."},
-     {t:"mc",q:"How many hours are in 1 day?",o:["12","16","24","48"],a:"24",h:"There are 24 hours in one full day."},
+     {t:"mc",q:"How many minutes in 1 hour?",o:["30","50","60","100"],a:"60",h:"60 minutes = 1 full hour."},
+     {t:"mc",q:"How many hours in 1 day?",o:["12","16","24","48"],a:"24",h:"There are 24 hours in one full day."},
      {t:"mc",q:"What time is 'quarter past 3'?",o:["3:05","3:15","3:25","3:45"],a:"3:15",h:"Quarter = 15 minutes. Quarter past 3 = 3:15."},
      {t:"mc",q:"What time is 'half past 6'?",o:["6:15","6:30","6:45","7:00"],a:"6:30",h:"Half past = 30 minutes past. 6:30."},
      {t:"mc",q:"The minute hand points to 3. How many minutes past the hour?",o:["3","12","15","30"],a:"15",h:"Each number on the clock = 5 minutes. 3 × 5 = 15."}
@@ -458,11 +465,11 @@ const QB={
      {t:"sa",q:"Adebayo collects 15 sticks. He finds 7 more. How many sticks in total?",a:"22",h:"15 + 7 = ?"},
      {t:"mc",q:"Toluwani has 3 bags with 4 mangoes each. How many mangoes in total?",o:["7","10","12","14"],a:"12",h:"3 bags × 4 mangoes each = ?"},
      {t:"mc",q:"Iyebiye had 20 naira. She spends 8 naira on biscuits. How much is left?",o:["10","12","14","16"],a:"12",h:"20 − 8 = ?"},
-     {t:"sa",q:"There are 9 boys and 8 girls in a class. How many children are there altogether?",a:"17",h:"9 + 8 = ?"},
+     {t:"sa",q:"There are 9 boys and 8 girls in a class. How many children altogether?",a:"17",h:"9 + 8 = ?"},
      {t:"mc",q:"Kemi has 6 plates each with 3 biscuits. How many biscuits?",o:["9","15","18","24"],a:"18",h:"6 × 3 = ?"},
      {t:"sa",q:"Femi has 25 stickers. He gives away 10. How many remain?",a:"15",h:"25 − 10 = ?"},
      {t:"mc",q:"Seun reads 8 pages on Monday and 7 on Tuesday. How many pages total?",o:["13","14","15","16"],a:"15",h:"8 + 7 = ?"},
-     {t:"mc",q:"Eniyi bakes 18 buns and gives 6 to her brother. How many buns does she have left?",o:["10","11","12","14"],a:"12",h:"18 − 6 = ?"},
+     {t:"mc",q:"Eniyi bakes 18 buns and gives 6 to her brother. How many buns left?",o:["10","11","12","14"],a:"12",h:"18 − 6 = ?"},
      {t:"sa",q:"Iyebiye has 7 red beads and 8 blue beads. How many beads altogether?",a:"15",h:"7 + 8 = ?"}
     ]
    }
@@ -470,8 +477,8 @@ const QB={
   eng:{
    "Phonics & Spelling":{icon:"🔤",desc:"Sounds, letters and spelling",
     ex:[
-     {q:"Which word rhymes with 'cat'?  — hat / dog / run",a:"hat",e:"Cat and hat both end in the sound -at."},
-     {q:"Which word starts with 'ch'?  — chair / ship / whale",a:"chair",e:"'Ch' makes the sound in 'cheese' — chair!"},
+     {q:"Which word rhymes with 'cat'?",a:"hat",e:"Cat and hat both end in the sound -at."},
+     {q:"Which word starts with 'ch'?",a:"chair",e:"'Ch' makes the sound in 'cheese' — chair!"},
      {q:"Spell the animal that says moo.",a:"cow",e:"C-O-W. A cow says moo!"}
     ],
     qs:[
@@ -489,8 +496,8 @@ const QB={
    },
    "Grammar":{icon:"📖",desc:"Nouns, verbs, adjectives and more",
     ex:[
-     {q:"Which word is a noun?  run / apple / quickly",a:"apple",e:"A noun names a person, place, or thing. Apple is a thing."},
-     {q:"Which word is a verb?  blue / jump / soft",a:"jump",e:"Verbs are action words — things you can do."},
+     {q:"Which word is a noun?",a:"apple",e:"A noun names a person, place, or thing. Apple is a thing."},
+     {q:"Which word is a verb?",a:"jump",e:"Verbs are action words — things you can do."},
      {q:"Which is an adjective in: 'The fluffy kitten sleeps'?",a:"fluffy",e:"Adjectives describe nouns. Fluffy describes what kind of kitten."}
     ],
     qs:[
@@ -538,7 +545,7 @@ const QB={
     qs:[
      {t:"mc",q:"½ + ¼ = ?",o:["2/6","2/4","1/6","3/4"],a:"3/4",h:"Convert ½ to 2/4. 2/4+1/4=3/4."},
      {t:"mc",q:"¾ + ¼ = ?",o:["4/8","8/4","3/8","4/4"],a:"4/4",h:"3/4+1/4=4/4=1 whole."},
-     {t:"mc",q:"⅔ − ⅓ = ?",o:["2/6","3/3","1/6","1/3"],a:"1/3",h:"Same denominator: 2−1=1. Answer: 1/3."},
+     {t:"mc",q:"⅔ − ⅓ = ?",o:["2/6","3/3","1/6","1/3"],a:"1/3",h:"Same denominator: 2-1=1. Answer: 1/3."},
      {t:"mc",q:"¾ × 4 = ?",o:["1","2","4","3"],a:"3",h:"3×4÷4=3."},
      {t:"sa",q:"0.5 + 0.75 = ?",a:"1.25",h:"0.50+0.75=1.25."},
      {t:"mc",q:"Which is greatest: 0.9, 0.09, 0.99, 0.909?",o:["0.9","0.09","0.909","0.99"],a:"0.99",h:"Compare digit by digit. 0.99 has 9 tenths AND 9 hundredths."},
@@ -578,7 +585,7 @@ const QB={
      {t:"sa",q:"A square has sides of 7 cm. What is its perimeter in cm?",a:"28",h:"Perimeter of square = 4 × side."},
      {t:"mc",q:"What is the sum of angles in any triangle?",o:["90°","120°","360°","180°"],a:"180°",h:"All triangles add up to 180°."},
      {t:"mc",q:"A rectangle is 12 cm long and 4 cm wide. What is its area?",o:["16 cm²","32 cm²","56 cm²","48 cm²"],a:"48 cm²",h:"Area = 12×4=48."},
-     {t:"mc",q:"What is the perimeter of a rectangle 8 cm long and 3 cm wide?",o:["11 cm","16 cm","24 cm","22 cm"],a:"22 cm",h:"P=2×(8+3)=2×11=22."},
+     {t:"mc",q:"What is the perimeter of rectangle 8 cm long and 3 cm wide?",o:["11 cm","16 cm","24 cm","22 cm"],a:"22 cm",h:"P=2×(8+3)=2×11=22."},
      {t:"mc",q:"How many degrees in a right angle?",o:["45°","60°","180°","90°"],a:"90°",h:"A right angle is exactly 90°."},
      {t:"mc",q:"How many degrees in a straight line?",o:["90°","120°","360°","180°"],a:"180°",h:"A straight line = 180°."},
      {t:"mc",q:"How many degrees in a full turn?",o:["90°","180°","270°","360°"],a:"360°",h:"A full turn = 360°."},
@@ -593,16 +600,16 @@ const QB={
      {q:"Mean of 4, 8, 6, 10, 7 = ?",a:"7",e:"Sum=35. Count=5. 35÷5=7."}
     ],
     qs:[
-     {t:"sa",q:"If n + 15 = 32, what is n?",a:"17",h:"n = 32−15=17."},
+     {t:"sa",q:"If n + 15 = 32, what is n?",a:"17",h:"n = 32-15=17."},
      {t:"mc",q:"What is the next number? 2, 6, 18, 54, __",o:["108","112","216","162"],a:"162",h:"×3 each time. 54×3=162."},
      {t:"mc",q:"Find the mean of: 4, 8, 6, 10, 7",o:["6","8","9","7"],a:"7",h:"Sum=35. Count=5. 35÷5=7."},
      {t:"sa",q:"If 3n = 27, what is n?",a:"9",h:"n=27÷3=9."},
      {t:"mc",q:"What is the next number? 5, 10, 20, 40, __",o:["60","70","90","80"],a:"80",h:"×2 each time. 40×2=80."},
      {t:"mc",q:"If x − 7 = 12, what is x?",o:["5","15","21","19"],a:"19",h:"x=12+7=19."},
-     {t:"mc",q:"What is the rule for: 3, 7, 11, 15, 19?",o:["+2","+3","×2","+4"],a:"+4",h:"7−3=4. Adding 4 each time."},
+     {t:"mc",q:"What is the rule for: 3, 7, 11, 15, 19?",o:["+2","+3","×2","+4"],a:"+4",h:"7-3=4. Adding 4 each time."},
      {t:"mc",q:"Find the mode of: 3, 5, 5, 7, 8, 5, 9",o:["3","7","9","5"],a:"5",h:"Mode = the number that appears MOST often."},
      {t:"mc",q:"Find the median of: 2, 5, 8, 11, 14",o:["5","11","14","8"],a:"8",h:"Median = the MIDDLE number when ordered."},
-     {t:"mc",q:"What is the range of: 3, 9, 15, 6, 12?",o:["9","10","15","12"],a:"12",h:"Range = biggest − smallest = 15−3=12."}
+     {t:"mc",q:"What is the range of: 3, 9, 15, 6, 12?",o:["9","10","15","12"],a:"12",h:"Range = biggest − smallest = 15-3=12."}
     ]
    },
    "Statistics & Ratio":{icon:"📊",desc:"Data, graphs and ratios",
@@ -637,7 +644,7 @@ const QB={
      {t:"mc",q:"'It's raining cats and dogs' is an example of:",o:["Simile","Metaphor","Alliteration","Idiom"],a:"Idiom",h:"Idioms don't mean what they literally say."},
      {t:"mc",q:"'Her voice was music to his ears' is a:",o:["Simile","Idiom","Personification","Metaphor"],a:"Metaphor",h:"Compares without 'like' or 'as'."},
      {t:"mc",q:"'She ran like the wind' is a:",o:["Idiom","Metaphor","Alliteration","Simile"],a:"Simile",h:"Similes compare using 'like' or 'as'."},
-     {t:"mc",q:"'The trees danced in the breeze' is an example of:",o:["Simile","Metaphor","Idiom","Personification"],a:"Personification",h:"Trees can't really dance — human quality given to a non-human."},
+     {t:"mc",q:"'The trees danced in the breeze' is an example of:",o:["Simile","Metaphor","Idiom","Personification"],a:"Personification",h:"Trees can't really dance — human quality given to non-human."},
      {t:"mc",q:"Which word is a synonym for 'courageous'?",o:["Timid","Careful","Lazy","Brave"],a:"Brave",h:"Courageous = brave."},
      {t:"mc",q:"What does 'enormous' mean?",o:["Very small","Very fast","Very quiet","Very large"],a:"Very large",h:"An elephant is enormous."},
      {t:"mc",q:"'Break a leg' means:",o:["Hurt yourself","Run away","Stop talking","Good luck"],a:"Good luck",h:"Actors say this before a performance — good luck!"},
@@ -664,25 +671,6 @@ const QB={
      {t:"mc",q:"Which word is a PRONOUN in: 'Adebayo said he was tired.'?",o:["Adebayo","said","tired","he"],a:"he",h:"Pronouns replace nouns: he, she, it, they, we."}
     ]
    },
-   "Reading Comprehension":{icon:"📖",desc:"Understanding and analysing texts",
-    ex:[
-     {q:"'The library was quiet as a whisper. Maya tiptoed between shelves.' → Where is Maya?",a:"In a library",e:"'The library was quiet' tells us directly."},
-     {q:"Same passage: Why does Maya tiptoe?",a:"She doesn't want to disturb the quiet",e:"'Quiet as a whisper' + tiptoe = careful not to make noise."},
-     {q:"A paragraph explains steps to bake a cake. This is which text structure?",a:"Chronological/Sequence",e:"Steps in order = sequence text structure."}
-    ],
-    qs:[
-     {t:"mc",q:"'The library was quiet as a whisper. Maya tiptoed between shelves.' → Where is Maya?",o:["In a classroom","In a store","In a museum","In a library"],a:"In a library",h:"'The library' — first word of the passage."},
-     {t:"mc",q:"Same passage: Why does Maya tiptoe?",o:["She is scared","She is playing a game","Her shoes are loud","She doesn't want to disturb the quiet"],a:"She doesn't want to disturb the quiet",h:"'Quiet as a whisper' — she's being careful."},
-     {t:"mc",q:"A paragraph explains how to bake a cake step-by-step. Which text structure?",o:["Compare and Contrast","Cause and Effect","Problem and Solution","Chronological/Sequence"],a:"Chronological/Sequence",h:"Steps in order = sequence structure."},
-     {t:"mc",q:"'Despite the heavy rain, Eniyi walked to school. She didn't want to miss her test.' → What can we infer about Eniyi?",o:["She loves rain","She is irresponsible","She forgot her umbrella","She is determined and responsible"],a:"She is determined and responsible",h:"Walking through rain to not miss a test shows determination."},
-     {t:"mc",q:"'Many birds migrate south for winter to escape the cold and find food.' → What is the MAIN IDEA?",o:["Birds are colourful","Winter is cold","Birds eat a lot","Birds migrate south to escape cold and find food"],a:"Birds migrate south to escape cold and find food",h:"The main idea covers the whole paragraph."},
-     {t:"mc",q:"'The government must act now. Rising temperatures are destroying ecosystems.' → The author's purpose is to:",o:["Entertain","Describe nature","Inform only","Persuade"],a:"Persuade",h:"'Must act now' = persuasive language."},
-     {t:"mc",q:"'First, mix the flour. Next, add milk. Finally, cook in a pan.' → This text type is:",o:["Fiction","Persuasive","Biography","Instructions"],a:"Instructions",h:"Step-by-step with 'first, next, finally' = instructions."},
-     {t:"mc",q:"'Iyebiye's hands trembled as she opened the envelope.' → What is she probably feeling?",o:["Boredom","Anger","Hunger","Nervousness or excitement"],a:"Nervousness or excitement",h:"Trembling hands = nervous or excited."},
-     {t:"mc",q:"What does 'infer' mean when reading?",o:["To read aloud","To look up a word","To summarise","To work out something not directly stated"],a:"To work out something not directly stated",h:"Inference = reading between the lines."},
-     {t:"mc",q:"'Although Adebayo was afraid, he stepped forward to speak.' → Which word shows contrast?",o:["afraid","stepped","forward","Although"],a:"Although",h:"'Although' introduces a contrasting idea."}
-    ]
-   },
    "Writing & Text Structure":{icon:"📝",desc:"Writing skills and text analysis",
     ex:[
      {q:"A writer uses many facts, dates and statistics. The author's purpose is mainly:",a:"Inform",e:"Facts and data = informational writing."},
@@ -707,10 +695,10 @@ const QB={
 };
 
 let S={student:null,grade:null,sub:null,topic:null,qs:[],ans:[],cur:0,hints:[]};
-let subs=JSON.parse(localStorage.getItem('bm_subs')||'[]');
-
+let subs=[];
 function ss(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function togD(id){const r=document.getElementById(id);if(!r)return;r.classList.toggle('open');}
 
 function pickGrade(g){S.grade=g;document.getElementById('gdis').textContent=g;ss('subjectScr');}
 
@@ -768,16 +756,15 @@ function renderQ(){
   let inp='';
   if(q.t==='mc'){
     const L=['A','B','C','D'];
-    done = false;
     inp=`<div class="opts">`+q.o.map((opt,oi)=>{
       let cls='opt';
       if(done){if(opt===q.a)cls+=' correct';else if(opt===a.sel)cls+=' wrong';}
       else if(opt===a.sel)cls+=' sel';
-      return `<button class="${cls}" onclick="pickOpt(${JSON.stringify(opt)},this)" ${done?'disabled':''}><span class="ol">${L[oi]}</span>${opt}</button>`;
+      return `<button class="${cls}" onclick="pickOpt(${oi},this)" ${done?'disabled':''}><span class="ol">${L[oi]}</span>${opt}</button>`;
     }).join('')+`</div>`;
   } else {
     let sc='';if(done)sc=a.ok?' correct':' wrong';
-    inp=`<input type="text" class="sain${sc}" id="sain" placeholder="Type your answer…" value="${(a.sel||'').replace(/"/g,'&quot;')}" ${done?'disabled':''}>`;
+    inp=`<input type="text" class="sain${sc}" id="sain" placeholder="Type your answer…" value="${(a.sel||'').replace(/"/g,'"')}" ${done?'disabled':''}>`;
   }
 
   let fb='';
@@ -807,21 +794,17 @@ function renderQ(){
       ${inp}
       ${fb}
       <div class="harea">
-        <button class="htog" onclick="togH(${i})">💡 ${S.hints[i]?'Hide Hint':'Need a Hint?'}</button>
         <div class="hbox ${S.hints[i]?'show':''}">${q.h}</div>
       </div>
     </div>
     <div class="qnav">${nav}</div>`;
 }
 
-function pickOpt(val,btn){
-  S.ans[S.cur].sel=val;
-  const qnav = document.querySelector('.qnav');
-  if(qnav){
-    qnav.innerHTML=`<button class="btn btn-mint" onclick="chkMC()">Check Answer ✓</button>`;
-  }
+function pickOpt(idx,btn){
+  S.ans[S.cur].sel=S.qs[S.cur].o[idx];
   document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
+  renderQ();
 }
 function chkMC(){const i=S.cur,q=S.qs[i];if(!S.ans[i].sel)return;S.ans[i].ok=S.ans[i].sel===q.a;renderQ();}
 function chkSA(){
@@ -835,10 +818,11 @@ function chkSA(){
 function nextQ(){S.cur++;renderQ();window.scrollTo(0,0);}
 function togH(i){S.hints[i]=!S.hints[i];renderQ();}
 
-function submitQ(){
+async function submitQ(){
   const total=S.qs.length,correct=S.ans.filter(a=>a.ok).length,pct=Math.round(correct/total*100);
-  subs.push({id:Date.now(),student:S.student.name,code:S.student.code,grade:`Grade ${S.grade}`,sub:S.sub,topic:S.topic,score:`${correct}/${total}`,pct,time:new Date().toLocaleString(),details:S.qs.map((q,i)=>({q:q.q.slice(0,60)+(q.q.length>60?'...':''),ok:S.ans[i].ok,given:S.ans[i].sel,right:q.a}))});
-  localStorage.setItem('bm_subs',JSON.stringify(subs));
+  const entry={student_name:S.student.name,student_code:S.student.code,grade:`Grade ${S.grade}`,subject:S.sub,topic:S.topic,score:`${correct}/${total}`,pct,time:new Date().toLocaleString(),details:S.qs.map((q,i)=>({q:q.q.slice(0,60)+(q.q.length>60?'...':''),ok:S.ans[i].ok,given:S.ans[i].sel,right:q.a}))};
+  const {data,error}=await supabase.from('submissions').insert([entry]).select();
+  if(data&&data.length){subs.push(data[0]);}else{subs.push({...entry,id:Date.now()});if(error)console.error('Supabase insert error',error);}
   const c=document.getElementById('scirc');
   c.className='scirc '+(pct>=80?'high':pct>=50?'mid':'low');
   document.getElementById('snum').textContent=`${correct}/${total}`;
@@ -856,18 +840,34 @@ function chkA(){const pw=document.getElementById('apw').value;if(pw===APW){docum
 document.getElementById('apw').addEventListener('keypress',e=>{if(e.key==='Enter')chkA();});
 function filt(f,btn){document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderAdmin(f);}
 
-function renderAdmin(filter){
-  subs=JSON.parse(localStorage.getItem('bm_subs')||'[]');
-  const fl=filter==='all'?subs:subs.filter(s=>s.grade===filter||s.sub===filter);
+async function renderAdmin(filter){
+  let fl;
+  let res=await supabase.from('submissions').select('*').order('created_at',{ascending:false});
+  if(res.error){console.error('Supabase select error',res.error);}
+  subs=(res.data||[]).map(r=>({id:r.id,student:r.student_name,code:r.student_code,grade:r.grade,sub:r.subject,topic:r.topic,score:r.score,pct:r.pct,time:r.time,details:r.details,grade_override:r.grade_override}));
+  fl=filter==='all'?subs:subs.filter(s=>s.grade===filter||s.sub===filter);
   const total=subs.length,avg=total?Math.round(subs.reduce((s,x)=>s+x.pct,0)/total):0,hi=total?Math.max(...subs.map(s=>s.pct)):0;
   document.getElementById('astats').innerHTML=`<div class="sc"><div class="sv">${total}</div><div class="sl">Submissions</div></div><div class="sc"><div class="sv">${avg}%</div><div class="sl">Avg Score</div></div><div class="sc"><div class="sv">${hi}%</div><div class="sl">Top Score</div></div><div class="sc"><div class="sv">${[...new Set(subs.map(s=>s.student))].length}</div><div class="sl">Students</div></div>`;
+  const studentRows=Object.entries(subs.reduce((a,s)=>{if(!a[s.student])a[s.student]={name:s.student,count:0,sum:0};a[s.student].count++;a[s.student].sum+=s.pct;return a;},{})).map(([name,data])=>{const avg=Math.round(data.sum/data.count);const cls=avg>=80?'h':avg>=50?'m':'l';return`<tr><td><strong>${name}</strong></td><td>${data.count}</td><td><span class="spi ${cls}">${avg}%</span></td></tr>`}).join('');
+  document.getElementById('ustats').innerHTML=`<table><thead><tr><th>Student</th><th>Quizzes Done</th><th>Average Grade</th></tr></thead><tbody>${studentRows}</tbody></table>`;
   const wrap=document.getElementById('atbl');
   if(!fl.length){wrap.innerHTML='<div class="empty">📭 No submissions yet.</div>';return;}
   wrap.innerHTML=`<table><thead><tr><th>Student</th><th>Grade</th><th>Subject</th><th>Topic</th><th>Score</th><th>Time</th><th></th></tr></thead><tbody>${
-    fl.map(s=>{const cls=s.pct>=80?'h':s.pct>=50?'m':'l';const did='d'+s.id;const da=s.details.map(d=>`<div class="da ${d.ok?'c':'w'}">${d.ok?'✅':'❌'} ${d.q} → <b>${d.given||'?'}</b>${!d.ok?' ✔ '+d.right:''}</div>`).join('');return`<tr><td><strong>${s.student}</strong><br><small style="color:var(--muted)">${s.code}</small></td><td>${s.grade}</td><td style="text-transform:capitalize">${s.sub}</td><td>${s.topic}</td><td><span class="spi ${cls}">${s.score} (${s.pct}%)</span></td><td style="font-size:11px;color:var(--muted)">${s.time}</td><td><button class="db" onclick="togD('${did}',this)">▼</button></td></tr><tr class="dr" id="${did}"><td colspan="7"><div class="das">${da}</div></td></tr>`;}).join('')
+    fl.map(s=>{const cls=s.pct>=80?'h':s.pct>=50?'m':'l';const did='d'+s.id;const da=s.details.map(d=>`<div class="da ${d.ok?'c':'w'}">${d.ok?'✅':'❌'} ${d.q.slice(0,60)}${d.q.length>60?'...':''} → <b>${d.given||'?'}</b>${!d.ok?' ✔ '+d.right:''}</div>`).join('');const curGrade=s.grade_override||s.grade;return`<tr><td><strong>${s.student}</strong><br><small style="color:var(--muted)">${s.code}</small></td><td><span class="grade-lbl" id="gl-${s.id}" data-subid="${s.id}">${curGrade}</span></td><td style="text-transform:capitalize">${s.sub}</td><td>${s.topic}</td><td><span class="spi ${cls}">${s.score} (${s.pct}%)</span></td><td style="font-size:11px;color:var(--muted)">${s.time}</td><td><button class="db" onclick="togD('${did}',this)">Details</button></td></tr><tr class="dr" id="${did}"><td colspan="7"><div class="das">${da}</div><div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong style="font-size:12px;color:var(--muted)">Change grade:</strong><select class="gs" onchange="changeGrade('${s.id}',this.value)" style="padding:6px 10px;border-radius:8px;border:2px solid var(--brd);font-family:Nunito;font-size:13px;font-weight:700"><option value="">--</option><option value="Grade 2" ${curGrade==='Grade 2'?'selected':''}>Grade 2</option><option value="Grade 5" ${curGrade==='Grade 5'?'selected':''}>Grade 5</option></select><button class="btn btn-ghost" onclick="togD('${did}',this)" style="padding:6px 12px;font-size:12px">Close</button></div></td></tr>`;}).join('')
   }</tbody></table>`;
 }
-function togD(id,btn){const r=document.getElementById(id);r.classList.toggle('open');btn.textContent=r.classList.contains('open')?'▲':'▼';}
+async function changeGrade(subId,newGrade){
+  if(!newGrade)return;
+  const sub=subs.find(s=>String(s.id)===String(subId));
+  if(!sub)return;
+  sub.grade_override=newGrade;
+  const{error}=await supabase.from('submissions').update({grade_override:newGrade}).eq('id',subId);
+  if(error)console.error('Supabase update error',error);
+  const lbl=document.getElementById('gl-'+subId);
+  if(lbl){lbl.textContent=newGrade;lbl.style.background='#E8F8EF';lbl.style.color='var(--ok)';setTimeout(()=>{lbl.style.background='';lbl.style.color='';},1200);}
+  const sel=document.querySelector('.gs[onchange*="'+subId+'"]');
+  if(sel){sel.value="";}
+}
 </script>
 </body>
 </html>
